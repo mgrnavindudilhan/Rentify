@@ -3,10 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rentify LK - Next-Gen P2P Equipment Rental Ecosystem</title>
+  <title>Rentify LK - Premium P2P Equipment Rental</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Rent high-end equipment in Sri Lanka. P2P rental platform for cameras, power tools, and more.">
+  <meta name="keywords" content="rent equipment sri lanka, p2p rental, camera rental, tool rental">
+  <link rel="canonical" href="https://rentify-lk.web.app">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Rentify LK - P2P Equipment Rental">
+  <meta property="og:description" content="Rent cameras, power tools, and professional gear from trusted owners.">
+  <meta property="og:type" content="website">
+  
+  <!-- Fonts & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -17,35 +30,43 @@
       }
     }
   </script>
+  
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+    .message-in { animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
+    .upload-zone:hover { border-color: #4f46e5; background: rgba(79, 70, 229, 0.05); }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 
+  <!-- Background Glows -->
   <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none"></div>
   <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none"></div>
 
-  <div id="landing-view" class="flex-1 flex flex-col items-center justify-center px-4 py-12 relative z-10">
+  <!-- LANDING VIEW -->
+  <div id="landing-view" class="flex-1 flex flex-col items-center justify-center px-4 py-12 relative z-10 min-h-screen">
     <div class="max-w-4xl mx-auto text-center space-y-8">
-      
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
         <i class="fa-solid fa-bolt text-amber-400"></i> Sri Lanka's Premier P2P Sharing Network
       </div>
-
       <h1 class="text-5xl sm:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-[1.1]">
         Rent High-End Equipment <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Anytime, Anywhere.</span>
       </h1>
-
       <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-medium">
         Discover cameras, power tools, and professional gear from trusted owners near you. Secure, fast, and fully authenticated with Google.
       </p>
-
       <div class="pt-4">
-        <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-3xl max-w-md mx-auto shadow-2xl backdrop-blur-xl space-y-6">
+        <div class="glass-card p-8 rounded-3xl max-w-md mx-auto shadow-2xl space-y-6">
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">
             ⚡
           </div>
           <div>
             <h3 class="text-xl font-bold text-white">Welcome to Rentify LK</h3>
-            <p class="text-xs text-slate-400 mt-1">Please sign in with your Google account to access the platform.</p>
+            <p class="text-xs text-slate-400 mt-1">Sign in with Google to access the platform</p>
           </div>
           <button id="google-login-btn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center gap-3 text-sm active:scale-95">
             <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -58,12 +79,13 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <div id="main-app-view" class="hidden flex-1 flex flex-col">
+  <!-- MAIN APP VIEW -->
+  <div id="main-app-view" class="hidden flex-1 flex-col">
     
+    <!-- NAVBAR -->
     <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
@@ -75,12 +97,13 @@
             <span class="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span>
           </div>
         </div>
-
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-3 bg-slate-900/90 p-1.5 pr-4 rounded-full border border-slate-800">
             <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500 object-cover">
             <span id="user-name" class="font-semibold text-sm text-slate-200 hidden sm:inline"></span>
-            <button onclick="switchView('dashboard')" class="ml-2 text-xs bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 px-3 py-1.5 rounded-full border border-indigo-500/40 transition font-bold">Dashboard 👑</button>
+            <button onclick="switchView('dashboard')" class="ml-2 text-xs bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 px-3 py-1.5 rounded-full border border-indigo-500/40 transition font-bold">
+              <i class="fa-solid fa-gem"></i> Dashboard
+            </button>
           </div>
           <button id="logout-btn" class="text-slate-400 hover:text-white text-sm font-bold bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl transition">
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -89,8 +112,10 @@
       </div>
     </nav>
 
+    <!-- MAIN CONTENT -->
     <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full z-10">
       
+      <!-- HOME VIEW -->
       <div id="home-view" class="space-y-8">
         <div class="text-center max-w-3xl mx-auto">
           <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Explore Inventory</span>
@@ -98,7 +123,8 @@
           <p class="text-slate-400 text-sm sm:text-base">Browse items listed by verified owners across Sri Lanka.</p>
         </div>
 
-        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
+        <!-- Filters -->
+        <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
             <div class="sm:col-span-6 relative">
               <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
@@ -124,25 +150,28 @@
           </div>
         </div>
 
+        <!-- Items Grid -->
         <div id="items-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-96"></div>
         </div>
       </div>
 
+      <!-- DASHBOARD VIEW -->
       <div id="dashboard-view" class="hidden max-w-4xl mx-auto space-y-8">
         <div class="flex items-center justify-between pb-4 border-b border-slate-800">
           <div>
-            <h1 class="text-2xl font-black text-white">👑 Owner Control Center</h1>
-            <p class="text-xs text-slate-400">List and manage your tools seamlessly.</p>
+            <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-crown text-amber-400"></i> Owner Control Center</h1>
+            <p class="text-xs text-slate-400">List and manage your tools seamlessly</p>
           </div>
           <button onclick="switchView('home')" class="text-xs bg-slate-900 hover:bg-slate-800 px-4 py-2 rounded-xl font-bold border border-slate-800 transition">
             ⬅ Back to Store
           </button>
         </div>
 
-        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+        <!-- Add Item Form -->
+        <div class="glass-card rounded-2xl p-6">
           <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-plus text-indigo-400"></i> List New Equipment
+            <i class="fa-solid fa-plus-circle text-indigo-400"></i> List New Equipment
           </h2>
           <form id="add-item-form" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -163,29 +192,59 @@
               </select>
             </div>
             <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200"></textarea>
-            <input type="url" id="imageUrl" placeholder="Direct Image URL (e.g. ImgBB link)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
+            
+            <!-- IMAGE UPLOAD - IMG BB -->
+            <div class="upload-zone bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl p-6 text-center transition cursor-pointer" id="upload-zone">
+              <input type="file" id="image-upload" accept="image/*" class="hidden">
+              <i class="fa-solid fa-cloud-upload-alt text-4xl text-slate-600"></i>
+              <p class="text-sm text-slate-400 mt-2 font-medium">Click to upload equipment image</p>
+              <p class="text-xs text-slate-500">PNG, JPG, WEBP (Max 32MB)</p>
+              <div id="upload-preview" class="mt-3 hidden">
+                <img id="preview-img" class="max-h-48 mx-auto rounded-lg border border-slate-700 shadow-lg">
+                <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check-circle"></i> Image uploaded successfully!</p>
+              </div>
+            </div>
+
+            <button type="submit" id="publish-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
               🚀 Publish Equipment
             </button>
           </form>
         </div>
 
-        <h2 class="text-xl font-bold">Your Active Listings</h2>
+        <!-- My Listings -->
+        <h2 class="text-xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-list text-indigo-400"></i> Your Active Listings
+        </h2>
         <div id="my-items-list" class="space-y-4"></div>
       </div>
 
-      <div id="chat-view" class="hidden max-w-lg mx-auto bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[70vh] backdrop-blur-md">
-        <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center gap-3">
-          <button onclick="switchView('home')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
-          <div>
-            <h2 id="chat-item-title" class="font-bold text-sm text-white">Inquiry Chat</h2>
-            <span class="text-[10px] text-emerald-400">● Live Secure Messaging</span>
+      <!-- CHAT VIEW -->
+      <div id="chat-view" class="hidden max-w-2xl mx-auto glass-card rounded-2xl overflow-hidden flex flex-col h-[80vh] shadow-2xl">
+        <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button onclick="switchView('home')" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+            <div>
+              <h2 id="chat-item-title" class="font-bold text-sm text-white">💬 Live Chat</h2>
+              <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online
+              </span>
+            </div>
+          </div>
+          <div id="chat-user-info" class="text-xs text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-user"></i>
+            <span id="chat-participant-name">Owner</span>
           </div>
         </div>
-        <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60"></div>
-        <form id="chat-form" class="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
-          <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
-          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm">
+        
+        <!-- Messages Box -->
+        <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60">
+          <div class="text-center text-xs text-slate-500 py-4">✨ No messages yet. Start the conversation!</div>
+        </div>
+        
+        <!-- Chat Input -->
+        <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+          <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition" required>
+          <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </form>
@@ -194,10 +253,17 @@
     </main>
   </div>
 
+  <!-- FIREBASE MODULES -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, where, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // ============================================================
+    // 🔥 IMG BB API KEY - ඔබගේ API Key එක මෙතනට දාන්න
+    // ============================================================
+    const IMG_BB_API_KEY = "a466c482d80add89bfd3f941bac3c6fa";
+    // ============================================================
 
     const firebaseConfig = {
       apiKey: "AIzaSyA9UV8Td4R4ZFBZVrRzsIVaQ7j5Qd0-Fs8",
@@ -218,59 +284,115 @@
     let currentUser = null;
     let allItems = [];
     let activeChatId = null;
+    let selectedFile = null;
 
-    // Google Sign-In Trigger from Landing Page
+    // DOM Elements
+    const landingView = document.getElementById("landing-view");
+    const mainAppView = document.getElementById("main-app-view");
+    const userImg = document.getElementById("user-img");
+    const userName = document.getElementById("user-name");
+    const itemsContainer = document.getElementById("items-container");
+    const messagesBox = document.getElementById("messages-box");
+    const chatForm = document.getElementById("chat-form");
+    const msgInput = document.getElementById("msg-input");
+    const chatItemTitle = document.getElementById("chat-item-title");
+    const chatParticipantName = document.getElementById("chat-participant-name");
+    const uploadZone = document.getElementById("upload-zone");
+    const fileInput = document.getElementById("image-upload");
+    const previewImg = document.getElementById("preview-img");
+    const uploadPreview = document.getElementById("upload-preview");
+    const publishBtn = document.getElementById("publish-btn");
+
+    // =============== AUTH ===============
     document.getElementById("google-login-btn").addEventListener("click", () => {
-      signInWithPopup(auth, provider).catch(err => alert(err.message));
+      signInWithPopup(auth, provider).catch(err => alert("Login Error: " + err.message));
     });
 
-    // Logout
     document.getElementById("logout-btn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        location.reload();
-      });
+      signOut(auth).then(() => location.reload());
     });
 
-    // Auth State Observer
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
-      const landingView = document.getElementById("landing-view");
-      const mainAppView = document.getElementById("main-app-view");
-
       if (user) {
-        // Hide landing, show main dashboard/store
         landingView.classList.add("hidden");
         mainAppView.classList.remove("hidden");
-        document.getElementById("user-img").src = user.photoURL;
-        document.getElementById("user-name").innerText = user.displayName;
+        userImg.src = user.photoURL || "https://ui-avatars.com/api/?name=" + user.displayName;
+        userName.innerText = user.displayName || "User";
       } else {
-        // Show landing, hide main
         landingView.classList.remove("hidden");
         mainAppView.classList.add("hidden");
       }
     });
 
-    // View Switcher Function
+    // =============== VIEW SWITCHER ===============
     window.switchView = (viewName, meta = {}) => {
       document.getElementById("home-view").classList.add("hidden");
       document.getElementById("dashboard-view").classList.add("hidden");
       document.getElementById("chat-view").classList.add("hidden");
 
-      if(viewName === 'home') {
+      if (viewName === 'home') {
         document.getElementById("home-view").classList.remove("hidden");
-      } else if(viewName === 'dashboard') {
-        document.getElementById("dashboard-view").classList.remove("hidden");
-        loadMyItems(currentUser.uid);
-      } else if(viewName === 'chat') {
+      } else if (viewName === 'dashboard') {
+        if (currentUser) {
+          document.getElementById("dashboard-view").classList.remove("hidden");
+          loadMyItems(currentUser.uid);
+        }
+      } else if (viewName === 'chat') {
         document.getElementById("chat-view").classList.remove("hidden");
         activeChatId = meta.itemId;
-        document.getElementById("chat-item-title").innerText = meta.itemTitle;
+        chatItemTitle.innerText = "💬 " + meta.itemTitle;
+        chatParticipantName.innerText = meta.ownerName || "Owner";
         loadMessages(meta.itemId);
       }
     };
 
-    // Fetch and Render Home Items
-    const itemsContainer = document.getElementById("items-container");
+    // =============== IMAGE UPLOAD ===============
+    uploadZone.addEventListener("click", () => fileInput.click());
+    
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 32 * 1024 * 1024) {
+          alert("Image must be less than 32MB");
+          fileInput.value = "";
+          return;
+        }
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImg.src = e.target.result;
+          uploadPreview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // =============== IMG BB UPLOAD FUNCTION ===============
+    async function uploadToImgBB(file) {
+      const formData = new FormData();
+      formData.append('key', IMG_BB_API_KEY);
+      formData.append('image', file);
+
+      try {
+        const response = await fetch('https://api.imgbb.com/1/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          return data.data.url;
+        } else {
+          throw new Error(data.error?.message || 'Upload failed');
+        }
+      } catch (error) {
+        console.error('IMG BB Upload Error:', error);
+        throw error;
+      }
+    }
+
+    // =============== ITEMS CRUD ===============
     onSnapshot(collection(db, "items"), (snapshot) => {
       allItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderItems(allItems);
@@ -278,16 +400,17 @@
 
     function renderItems(items) {
       itemsContainer.innerHTML = "";
-      if(items.length === 0) {
-        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><p>No equipment found matching criteria.</p></div>`;
+      if (items.length === 0) {
+        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><i class="fa-solid fa-box-open text-4xl mb-3 block"></i><p>No equipment found matching criteria.</p></div>`;
         return;
       }
+      
       items.forEach(item => {
         const isAvailable = item.status === "Available";
         itemsContainer.innerHTML += `
-          <div class="group bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col shadow-xl">
-            <div class="relative h-52 bg-slate-950">
-              <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+          <div class="group bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col shadow-xl hover:shadow-indigo-500/10">
+            <div class="relative h-52 bg-slate-950 overflow-hidden">
+              <img src="${item.imageUrl || 'https://via.placeholder.com/400x300/1e293b/4f46e5?text=No+Image'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-3 left-3 text-xs font-bold px-3 py-1 rounded-full backdrop-blur-md ${isAvailable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">● ${item.status}</span>
               <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-950/80 text-slate-300 border border-slate-800">📍 ${item.location}</span>
             </div>
@@ -295,12 +418,13 @@
               <div>
                 <span class="text-[10px] font-bold tracking-wider uppercase text-indigo-400">${item.category || 'Tool'}</span>
                 <h3 class="text-lg font-bold text-white mb-1">${item.title}</h3>
-                <p class="text-slate-400 text-xs line-clamp-2 mb-4">${item.description}</p>
+                <p class="text-slate-400 text-xs line-clamp-2 mb-4">${item.description || 'No description'}</p>
               </div>
               <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div><span class="text-xs text-slate-500 block">Per Day</span><span class="text-lg font-extrabold text-white">LKR ${item.price}</span></div>
-                <button onclick="openChat('${item.id}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
-                  ${isAvailable ? 'Request Borrow ⚡' : 'Unavailable'}
+                <button onclick="openChat('${item.id}', '${item.title}', '${item.ownerName || 'Owner'}')" 
+                  class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
+                  ${isAvailable ? '💬 Contact Owner' : 'Unavailable'}
                 </button>
               </div>
             </div>
@@ -308,52 +432,81 @@
       });
     }
 
-    window.openChat = (itemId, itemTitle) => {
-      switchView('chat', { itemId, itemTitle });
+    window.openChat = (itemId, itemTitle, ownerName) => {
+      if (!currentUser) {
+        alert("Please sign in first!");
+        return;
+      }
+      switchView('chat', { itemId, itemTitle, ownerName });
     };
 
-    // Filters
-    document.getElementById("search-input").addEventListener("input", filterData);
-    document.getElementById("location-filter").addEventListener("change", filterData);
-    document.getElementById("category-filter").addEventListener("change", filterData);
-
-    function filterData() {
-      const search = document.getElementById("search-input").value.toLowerCase();
-      const location = document.getElementById("location-filter").value;
-      const category = document.getElementById("category-filter").value;
-      const filtered = allItems.filter(item => {
-        return (item.title.toLowerCase().includes(search) || item.description.toLowerCase().includes(search)) &&
-               (location === "All" || item.location === location) &&
-               (category === "All" || item.category === category);
-      });
-      renderItems(filtered);
-    }
-
-    // Owner Add Item
+    // =============== ADD ITEM WITH IMG BB UPLOAD ===============
     document.getElementById("add-item-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      await addDoc(collection(db, "items"), {
-        title: document.getElementById("title").value,
-        price: document.getElementById("price").value,
-        location: document.getElementById("location").value,
-        category: document.getElementById("category").value,
-        description: document.getElementById("description").value,
-        imageUrl: document.getElementById("imageUrl").value,
-        status: "Available",
-        ownerId: currentUser.uid,
-        createdAt: new Date()
-      });
-      alert("Equipment published successfully!");
-      document.getElementById("add-item-form").reset();
+      
+      if (!currentUser) {
+        alert("Please sign in first!");
+        return;
+      }
+
+      if (!selectedFile) {
+        alert("Please upload an image for the equipment!");
+        return;
+      }
+
+      const title = document.getElementById("title").value;
+      const price = document.getElementById("price").value;
+      const location = document.getElementById("location").value;
+      const category = document.getElementById("category").value;
+      const description = document.getElementById("description").value;
+
+      // Disable button while uploading
+      publishBtn.disabled = true;
+      publishBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+      try {
+        // Upload to IMG BB
+        const imageUrl = await uploadToImgBB(selectedFile);
+
+        // Save to Firestore
+        await addDoc(collection(db, "items"), {
+          title: title,
+          price: price,
+          location: location,
+          category: category,
+          description: description,
+          imageUrl: imageUrl,
+          status: "Available",
+          ownerId: currentUser.uid,
+          ownerName: currentUser.displayName || "User",
+          ownerPhoto: currentUser.photoURL || "",
+          createdAt: new Date()
+        });
+
+        alert("✅ Equipment published successfully!");
+        document.getElementById("add-item-form").reset();
+        selectedFile = null;
+        uploadPreview.classList.add("hidden");
+        fileInput.value = "";
+        
+        switchView('home');
+      } catch (error) {
+        alert("Error publishing: " + error.message);
+        console.error(error);
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.innerHTML = '🚀 Publish Equipment';
+      }
     });
 
+    // =============== MY ITEMS ===============
     function loadMyItems(userId) {
       const q = query(collection(db, "items"), where("ownerId", "==", userId));
       onSnapshot(q, (snapshot) => {
         const list = document.getElementById("my-items-list");
         list.innerHTML = "";
-        if(snapshot.empty) {
-          list.innerHTML = `<p class="text-slate-500 text-xs">You haven't listed any equipment yet.</p>`;
+        if (snapshot.empty) {
+          list.innerHTML = `<div class="text-center py-8 text-slate-500"><i class="fa-solid fa-box-open text-3xl mb-2 block"></i><p>You haven't listed any equipment yet.</p></div>`;
           return;
         }
         snapshot.forEach((itemDoc) => {
@@ -361,17 +514,18 @@
           const docId = itemDoc.id;
           const isAvail = item.status === "Available";
           list.innerHTML += `
-            <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+            <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-indigo-500/30 transition">
               <div class="flex items-center gap-4">
-                <img src="${item.imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-950">
+                <img src="${item.imageUrl || 'https://via.placeholder.com/60/1e293b/4f46e5?text=No+Image'}" class="w-16 h-16 rounded-lg object-cover bg-slate-950 border border-slate-700">
                 <div>
                   <h4 class="font-bold text-white">${item.title}</h4>
                   <span class="text-xs text-slate-400">LKR ${item.price} / day | 📍 ${item.location}</span>
+                  <span class="text-xs ${isAvail ? 'text-emerald-400' : 'text-rose-400'} block">${item.status}</span>
                 </div>
               </div>
               <div class="flex gap-2">
                 <button onclick="toggleStatus('${docId}', '${item.status}')" class="px-3 py-1.5 text-xs font-bold rounded-lg ${isAvail ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'} text-white transition">
-                  ${isAvail ? 'Mark Rented' : 'Mark Available'}
+                  ${isAvail ? '📌 Mark Rented' : '✅ Mark Available'}
                 </button>
                 <button onclick="deleteItem('${docId}')" class="px-3 py-1.5 text-xs font-bold bg-rose-600/20 hover:bg-rose-600 text-rose-300 rounded-lg transition border border-rose-500/30">
                   <i class="fa-solid fa-trash"></i>
@@ -383,51 +537,110 @@
     }
 
     window.toggleStatus = async (id, status) => {
-      await updateDoc(doc(db, "items", id), { status: status === "Available" ? "Currently Rented" : "Available" });
+      await updateDoc(doc(db, "items", id), { 
+        status: status === "Available" ? "Currently Rented" : "Available" 
+      });
     };
 
     window.deleteItem = async (id) => {
-      if(confirm("Delete this listing?")) await deleteDoc(doc(db, "items", id));
+      if (confirm("Delete this listing permanently?")) {
+        await deleteDoc(doc(db, "items", id));
+      }
     };
 
-    // Chat Logic
-    document.getElementById("chat-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const text = document.getElementById("msg-input").value;
-      if(!text || !activeChatId) return;
-      await addDoc(collection(db, `chats_${activeChatId}`), {
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName,
-        text: text,
-        timestamp: new Date()
+    // =============== FILTERS ===============
+    document.getElementById("search-input").addEventListener("input", filterData);
+    document.getElementById("location-filter").addEventListener("change", filterData);
+    document.getElementById("category-filter").addEventListener("change", filterData);
+
+    function filterData() {
+      const search = document.getElementById("search-input").value.toLowerCase();
+      const location = document.getElementById("location-filter").value;
+      const category = document.getElementById("category-filter").value;
+      const filtered = allItems.filter(item => {
+        return (item.title.toLowerCase().includes(search) || (item.description && item.description.toLowerCase().includes(search))) &&
+               (location === "All" || item.location === location) &&
+               (category === "All" || item.category === category);
       });
-      document.getElementById("msg-input").value = "";
+      renderItems(filtered);
+    }
+
+    // =============== CHAT SYSTEM ===============
+    
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = msgInput.value.trim();
+      if (!text || !activeChatId || !currentUser) return;
+
+      try {
+        await addDoc(collection(db, `chats_${activeChatId}`), {
+          senderId: currentUser.uid,
+          senderName: currentUser.displayName || "User",
+          senderPhoto: currentUser.photoURL || "",
+          text: text,
+          timestamp: new Date()
+        });
+        msgInput.value = "";
+      } catch (error) {
+        console.error("Chat send error:", error);
+        alert("Failed to send message");
+      }
     });
 
     function loadMessages(itemId) {
       const q = query(collection(db, `chats_${itemId}`), orderBy("timestamp", "asc"));
+      
       onSnapshot(q, (snapshot) => {
-        const box = document.getElementById("messages-box");
-        box.innerHTML = "";
-        if(snapshot.empty) {
-          box.innerHTML = `<p class="text-slate-500 text-center text-xs mt-10">No inquiries yet. Start a conversation!</p>`;
+        messagesBox.innerHTML = "";
+        
+        if (snapshot.empty) {
+          messagesBox.innerHTML = `
+            <div class="text-center text-slate-500 py-10">
+              <i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i>
+              <p class="text-sm">No messages yet</p>
+              <p class="text-xs">Start the conversation!</p>
+            </div>`;
           return;
         }
+
         snapshot.forEach((doc) => {
           const msg = doc.data();
-          const isMe = msg.senderId === currentUser.uid;
-          box.innerHTML += `
-            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-              <span class="text-[9px] text-slate-500 mb-0.5">${msg.senderName}</span>
-              <div class="px-3.5 py-2 rounded-2xl text-xs max-w-[80%] ${isMe ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none'}">
+          const isMe = msg.senderId === currentUser?.uid;
+          const senderDisplayName = msg.senderName || "Anonymous";
+          
+          const messageHTML = `
+            <div class="message-in flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+              <div class="flex items-center gap-2 mb-0.5">
+                ${!isMe ? `<img src="${msg.senderPhoto || 'https://ui-avatars.com/api/?name=' + senderDisplayName}" class="w-5 h-5 rounded-full border border-slate-700">` : ''}
+                <span class="text-[9px] font-semibold ${isMe ? 'text-indigo-400' : 'text-slate-400'}">
+                  ${isMe ? 'You' : senderDisplayName}
+                </span>
+                ${isMe ? `<img src="${currentUser?.photoURL || 'https://ui-avatars.com/api/?name=You'}" class="w-5 h-5 rounded-full border border-indigo-500">` : ''}
+              </div>
+              <div class="px-4 py-2.5 rounded-2xl text-sm max-w-[80%] break-words ${isMe ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-br-none shadow-lg shadow-indigo-600/20' : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'}">
                 ${msg.text}
               </div>
-            </div>`;
+              <span class="text-[8px] text-slate-500 mt-0.5">
+                ${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : ''}
+              </span>
+            </div>
+          `;
+          messagesBox.innerHTML += messageHTML;
         });
-        box.scrollTop = box.scrollHeight;
+        
+        messagesBox.scrollTop = messagesBox.scrollHeight;
       });
     }
+
+    msgInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        chatForm.dispatchEvent(new Event("submit"));
+      }
+    });
+
+    console.log("✅ Rentify LK v3.0 - Premium P2P Rental Platform Loaded!");
+    console.log("🔥 Features: IMG BB Image Upload, Live Chat with Names, Real-time Updates");
   </script>
 </body>
 </html>
-
