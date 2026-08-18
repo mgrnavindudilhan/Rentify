@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rentify LK - Premium P2P Equipment Rental</title>
   
-  <!-- SEO -->
   <meta name="description" content="Rent high-end equipment in Sri Lanka. P2P rental platform for electronics and non-electronics.">
-  <meta name="keywords" content="rent equipment sri lanka, p2p rental, camera rental, tool rental, electronics">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Fonts & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -87,7 +84,6 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden pb-16 sm:pb-0">
 
-  <!-- Background Glows -->
   <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none"></div>
   <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -199,7 +195,6 @@
           <p class="text-slate-400 text-xs sm:text-base">Browse items across all 25 districts of Sri Lanka.</p>
         </div>
 
-        <!-- Search & Filter Bar -->
         <div class="glass-card rounded-2xl p-3 sm:p-5 shadow-2xl relative">
           <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div class="flex-1 relative">
@@ -212,7 +207,6 @@
           </div>
         </div>
 
-        <!-- FILTER SIDEBAR -->
         <div class="overlay fixed inset-0 z-50" id="filter-overlay"></div>
         <div class="filter-sidebar fixed top-0 left-0 h-full w-full sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-4 sm:p-6 overflow-y-auto shadow-2xl" id="filter-sidebar">
           <button id="filter-close-btn" class="text-slate-400 hover:text-white text-2xl transition touch-target float-right">
@@ -249,7 +243,6 @@
           </div>
         </div>
 
-        <!-- Items Grid -->
         <div id="items-container" class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
           <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
           <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
@@ -440,7 +433,6 @@
       <!-- ===== CHAT VIEW ===== -->
       <div id="chat-view" class="hidden w-full flex flex-col sm:flex-row gap-2 sm:gap-4">
         
-        <!-- Chat List -->
         <div class="w-full sm:w-72 md:w-80 glass-card rounded-2xl overflow-hidden flex flex-col" style="max-height: 180px; min-height: 100px; sm:max-height: none; sm:min-height: 200px;">
           <div class="p-2 sm:p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
             <h3 class="font-bold text-white text-xs sm:text-sm"><i class="fa-solid fa-inbox text-indigo-400 mr-1 sm:mr-2"></i> <span class="hidden xs:inline">Chats</span></h3>
@@ -451,7 +443,6 @@
           </div>
         </div>
 
-        <!-- Chat Window -->
         <div class="flex-1 glass-card rounded-2xl overflow-hidden flex flex-col" style="height: calc(100vh - 280px); min-height: 200px; sm:height: auto;">
           <div class="p-2 sm:p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -474,7 +465,6 @@
             <div class="text-center text-xs text-slate-500 py-6 sm:py-10">✨ Select a chat to start</div>
           </div>
           
-          <!-- Reply Preview -->
           <div id="reply-preview" class="hidden bg-slate-800/80 px-3 sm:px-4 py-2 border-t border-slate-700 flex items-center justify-between">
             <div class="flex-1 min-w-0">
               <span class="text-[10px] sm:text-xs text-indigo-400 font-bold">Replying to:</span>
@@ -796,7 +786,7 @@
                 <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-base sm:text-lg font-extrabold text-white">LKR ${item.price}</span></div>
                 <div class="flex gap-1 sm:gap-2">
                   ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105 touch-target"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
-                  <button onclick="startPrivateChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'} touch-target">
+                  <button onclick="startPrivateChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}', '${item.id}')" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'} touch-target">
                     ${isAvailable ? '💬 Contact Owner' : 'Unavailable'}
                   </button>
                 </div>
@@ -1007,13 +997,12 @@
 
     // ========== PRIVATE CHAT SYSTEM ==========
     
-    // Get unique chat ID for 2 users
     function getPrivateChatId(userId1, userId2) {
       return [userId1, userId2].sort().join('_');
     }
 
-    // Start Private Chat
-    window.startPrivateChat = async (otherUserId, otherUserName, itemTitle) => {
+    // START PRIVATE CHAT
+    window.startPrivateChat = async (otherUserId, otherUserName, itemTitle, itemId) => {
       if (!currentUser) {
         alert('Please sign in first!');
         return;
@@ -1027,7 +1016,6 @@
       currentChatId = chatId;
       currentChatUser = { id: otherUserId, name: otherUserName };
 
-      // Check if chat exists
       const chatRef = doc(db, 'private_chats', chatId);
       const chatSnap = await getDoc(chatRef);
       
@@ -1042,14 +1030,32 @@
             [currentUser.uid]: currentUser.photoURL || '',
             [otherUserId]: ''
           },
+          // Owner tracking fields
+          itemId: itemId || '',
           itemTitle: itemTitle || '',
+          ownerId: otherUserId,
+          customerId: currentUser.uid,
+          ownerName: otherUserName,
+          customerName: currentUser.displayName || 'User',
+          isOwnerChat: true,
           lastMessage: '',
           lastUpdated: new Date(),
           createdAt: new Date()
         });
+      } else {
+        const data = chatSnap.data();
+        if (!data.ownerId || !data.customerId) {
+          await updateDoc(chatRef, {
+            ownerId: otherUserId,
+            customerId: currentUser.uid,
+            ownerName: otherUserName,
+            customerName: currentUser.displayName || 'User',
+            isOwnerChat: true,
+            itemTitle: itemTitle || data.itemTitle || ''
+          });
+        }
       }
 
-      // Open chat view
       document.getElementById('chat-view').classList.remove('hidden');
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('chat-title').textContent = `💬 ${otherUserName}`;
@@ -1058,7 +1064,7 @@
       loadAllChats();
     };
 
-    // Open chat by ID
+    // OPEN CHAT BY ID
     window.openChatById = (chatId, otherId, otherName) => {
       currentChatId = chatId;
       currentChatUser = { id: otherId, name: otherName };
@@ -1071,7 +1077,7 @@
       loadAllChats();
     };
 
-    // Load Private Messages
+    // LOAD PRIVATE MESSAGES
     function loadPrivateMessages(chatId) {
       const messagesRef = collection(db, 'private_chats', chatId, 'messages');
       const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -1138,27 +1144,68 @@
             const data = doc.data();
             const otherId = data.participants.find(id => id !== currentUser.uid);
             const otherName = data.participantNames?.[otherId] || 'User';
-            chats.push({ id: doc.id, ...data, otherId, otherName });
+            const isOwner = data.ownerId === currentUser.uid;
+            const displayName = isOwner ? (data.customerName || otherName) : otherName;
+            
+            chats.push({ 
+              id: doc.id, 
+              ...data, 
+              otherId, 
+              otherName: displayName,
+              isOwner: isOwner,
+              displayName: displayName
+            });
           });
 
           chats.sort((a, b) => b.lastUpdated?.toDate?.() - a.lastUpdated?.toDate?.());
           document.getElementById('chat-count').textContent = chats.length;
 
-          chats.forEach(chat => {
-            const isActive = chat.id === currentChatId;
+          const ownerChats = chats.filter(c => c.isOwner === true);
+          const normalChats = chats.filter(c => c.isOwner !== true);
+
+          if (ownerChats.length > 0) {
             chatList.innerHTML += `
-              <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
-                <div class="relative flex-shrink-0">
-                  <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-slate-700 object-cover">
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-xs sm:text-sm font-bold text-white truncate">${chat.otherName}</p>
-                  <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
-                </div>
-                <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
-              </div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 px-2 py-1">👑 Owner Chats</div>
             `;
-          });
+            ownerChats.forEach(chat => {
+              const isActive = chat.id === currentChatId;
+              chatList.innerHTML += `
+                <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.displayName}')">
+                  <div class="relative flex-shrink-0">
+                    <img src="https://ui-avatars.com/api/?name=${chat.displayName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-amber-500 object-cover">
+                    <span class="absolute -top-1 -right-1 text-[8px] bg-amber-600 text-white rounded-full px-1">👑</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm font-bold text-white truncate">${chat.displayName}</p>
+                    ${chat.itemTitle ? `<p class="text-[10px] text-indigo-400 truncate">📦 ${chat.itemTitle}</p>` : ''}
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+                  </div>
+                  <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
+                </div>
+              `;
+            });
+          }
+
+          if (normalChats.length > 0) {
+            chatList.innerHTML += `
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-1 mt-1">💬 All Chats</div>
+            `;
+            normalChats.forEach(chat => {
+              const isActive = chat.id === currentChatId;
+              chatList.innerHTML += `
+                <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.displayName}')">
+                  <div class="relative flex-shrink-0">
+                    <img src="https://ui-avatars.com/api/?name=${chat.displayName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-slate-700 object-cover">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs sm:text-sm font-bold text-white truncate">${chat.displayName}</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+                  </div>
+                  <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
+                </div>
+              `;
+            });
+          }
         }
 
         // Update Chats Page
@@ -1177,29 +1224,46 @@
             const data = doc.data();
             const otherId = data.participants.find(id => id !== currentUser.uid);
             const otherName = data.participantNames?.[otherId] || 'User';
-            chats.push({ id: doc.id, ...data, otherId, otherName });
+            const isOwner = data.ownerId === currentUser.uid;
+            const displayName = isOwner ? (data.customerName || otherName) : otherName;
+            
+            chats.push({ 
+              id: doc.id, 
+              ...data, 
+              otherId, 
+              otherName: displayName,
+              isOwner: isOwner,
+              displayName: displayName
+            });
           });
 
           chats.sort((a, b) => b.lastUpdated?.toDate?.() - a.lastUpdated?.toDate?.());
           chatPageCount.textContent = chats.length;
 
           chats.forEach(chat => {
+            const isOwner = chat.isOwner;
+            const borderColor = isOwner ? 'border-amber-500' : 'border-indigo-500';
+            const statusLabel = isOwner ? '👑 Customer' : '💬 User';
+
             chatPageList.innerHTML += `
-              <div class="glass-card rounded-2xl p-4 sm:p-5 hover:border-indigo-500/50 transition cursor-pointer private-chat-card" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
+              <div class="glass-card rounded-2xl p-4 sm:p-5 hover:border-indigo-500/50 transition cursor-pointer private-chat-card" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.displayName}')">
                 <div class="flex items-center gap-4">
                   <div class="relative flex-shrink-0">
-                    <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-indigo-500 object-cover">
+                    <img src="https://ui-avatars.com/api/?name=${chat.displayName}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 ${borderColor} object-cover">
+                    ${isOwner ? `<span class="absolute -top-1 -right-1 text-[10px] bg-amber-600 text-white rounded-full px-1.5 py-0.5">👑</span>` : ''}
                   </div>
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between gap-2">
-                      <h3 class="font-bold text-white text-sm sm:text-base truncate">${chat.otherName}</h3>
+                      <h3 class="font-bold text-white text-sm sm:text-base truncate">${chat.displayName}</h3>
                       <span class="text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleDateString() : ''}</span>
                     </div>
                     ${chat.itemTitle ? `<p class="text-xs text-indigo-400 truncate">📦 ${chat.itemTitle}</p>` : ''}
                     <p class="text-sm text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
                   </div>
                   <div class="flex-shrink-0">
-                    <span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">${chat.lastMessage ? '💬' : '📩'}</span>
+                    <span class="text-xs ${isOwner ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'} px-3 py-1 rounded-full border">
+                      ${statusLabel}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1299,8 +1363,8 @@
       switchPage('home');
     };
 
-    console.log('✅ Rentify LK v9.0 - Private 1-on-1 Chat System!');
-    console.log('💬 Features: Private Chats, Chat List, Chats Page, Reply System');
+    console.log('✅ Rentify LK v10.0 - Private 1-on-1 Chat with Owner Fix!');
+    console.log('💬 Features: Private Chats, Owner Chat List, Customer Names, Reply System');
   </script>
 </body>
-</html>
+                                                                                                 </html>
