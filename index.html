@@ -39,39 +39,23 @@
     .message-in { animation: slideIn 0.3s ease-out; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* Sidebar */
     .sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .sidebar.open { transform: translateX(0); }
     .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
     .overlay.active { opacity: 1; pointer-events: all; }
     
-    /* Filter Sidebar */
     .filter-sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .filter-sidebar.open { transform: translateX(0); }
     .filter-close-btn { position: absolute; top: 16px; right: 16px; }
     
-    /* Chat List */
     .chat-list-item { transition: all 0.2s ease; cursor: pointer; }
     .chat-list-item:hover { background: rgba(79, 70, 229, 0.1); }
     .chat-list-item.active { background: rgba(79, 70, 229, 0.15); border-left: 3px solid #4f46e5; }
     .chat-list-item:active { transform: scale(0.98); }
     
-    /* Chat Tabs */
-    .chat-tab { padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; transition: all 0.3s; cursor: pointer; }
-    .chat-tab.active { background: #4f46e5; color: white; }
-    .chat-tab:not(.active) { color: #94a3b8; background: transparent; }
-    .chat-tab:not(.active):hover { color: white; background: #1e293b; }
-    
     .message-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
-    
-    /* Mobile Touch Improvements */
     .touch-target { min-height: 44px; min-width: 44px; }
     
-    /* Loading Shimmer */
-    .shimmer { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    
-    /* Mobile First - Chat View */
     #chat-view { height: 100vh; max-height: 100vh; }
     #chat-list { max-height: 180px; min-height: 100px; }
     #messages-box { height: calc(100vh - 280px); min-height: 150px; }
@@ -87,7 +71,6 @@
       #messages-box { height: calc(75vh - 180px); }
     }
     
-    /* Mobile Bottom Nav */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(51, 65, 85, 0.5); display: flex; justify-content: space-around; padding: 6px 0 8px; }
     .bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: #64748b; transition: color 0.2s; padding: 4px 12px; }
     .bottom-nav button i { font-size: 20px; }
@@ -95,11 +78,14 @@
     
     @media (min-width: 640px) { .bottom-nav { display: none; } }
     
-    /* Mobile Filter */
     @media (max-width: 640px) {
       .filter-sidebar { width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
       .filter-sidebar .p-6 { padding: 16px !important; }
     }
+    
+    .private-chat-card:hover { transform: translateY(-2px); }
+    .whatsapp-float { position: fixed; bottom: 80px; right: 16px; z-index: 30; }
+    @media (min-width: 640px) { .whatsapp-float { bottom: 24px; right: 24px; } }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden pb-16 sm:pb-0">
@@ -179,6 +165,9 @@
         </button>
         <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="myitems">
           <i class="fa-solid fa-box w-5"></i> <span>My Items</span>
+        </button>
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="private-chats">
+          <i class="fa-solid fa-lock w-5"></i> <span>Private Chats</span>
         </button>
         <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="account">
           <i class="fa-solid fa-user w-5"></i> <span>Account</span>
@@ -322,6 +311,27 @@
         <div id="my-items-list" class="space-y-3 sm:space-y-4"></div>
       </div>
 
+      <!-- ===== PAGE: PRIVATE CHATS ===== -->
+      <div id="page-private-chats" class="page-content hidden max-w-4xl mx-auto space-y-6 sm:space-y-8">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-black text-white">
+              <i class="fa-solid fa-lock text-indigo-400"></i> Your Private Chats
+            </h1>
+            <p class="text-xs text-slate-400">Messages from customers who want to rent your items</p>
+          </div>
+          <span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30" id="private-chat-count">0</span>
+        </div>
+
+        <div id="private-chat-list" class="space-y-3 sm:space-y-4">
+          <div class="text-center text-slate-500 py-8 sm:py-12">
+            <i class="fa-solid fa-inbox text-3xl sm:text-5xl block mb-4 text-slate-700"></i>
+            <p class="text-sm font-medium">No private messages yet</p>
+            <p class="text-xs text-slate-600">When customers contact you about your items, they'll appear here</p>
+          </div>
+        </div>
+      </div>
+
       <!-- ===== PAGE: ACCOUNT ===== -->
       <div id="page-account" class="page-content hidden max-w-3xl mx-auto space-y-6 sm:space-y-8">
         <div class="pb-4 border-b border-slate-800">
@@ -458,9 +468,14 @@
                 </span>
               </div>
             </div>
-            <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-[10px] sm:text-xs bg-rose-500/10 hover:bg-rose-500/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-rose-500/30 transition touch-target">
-              <i class="fa-solid fa-trash"></i>
-            </button>
+            <div class="flex items-center gap-1 sm:gap-2">
+              <a id="chat-whatsapp-link" href="#" target="_blank" class="text-emerald-400 hover:text-emerald-300 text-[10px] sm:text-xs bg-emerald-500/10 hover:bg-emerald-500/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-emerald-500/30 transition touch-target hidden">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+              <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-[10px] sm:text-xs bg-rose-500/10 hover:bg-rose-500/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-rose-500/30 transition touch-target">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
           </div>
 
           <div id="messages-box" class="flex-1 p-3 sm:p-4 overflow-y-auto space-y-2 sm:space-y-3 bg-slate-950/60">
@@ -492,7 +507,7 @@
   <div class="bottom-nav sm:hidden">
     <button class="active" data-page="home"><i class="fa-solid fa-home"></i> Home</button>
     <button data-page="myitems"><i class="fa-solid fa-box"></i> Items</button>
-    <button data-page="account"><i class="fa-solid fa-user"></i> Account</button>
+    <button data-page="private-chats"><i class="fa-solid fa-lock"></i> Private</button>
     <button data-page="dashboard"><i class="fa-solid fa-gem"></i> Dashboard</button>
   </div>
 
@@ -526,6 +541,7 @@
     let replyToMessage = null;
     let currentChatId = null;
     let currentChatUser = null;
+    let currentChatWhatsApp = null;
 
     const DISTRICTS = [
       'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -553,6 +569,8 @@
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const chatList = document.getElementById('chat-list');
+    const privateChatList = document.getElementById('private-chat-list');
+    const privateChatCount = document.getElementById('private-chat-count');
 
     // ========== AUTH ==========
     document.getElementById('google-login-btn').addEventListener('click', () => {
@@ -599,6 +617,7 @@
         populateCategoryDropdowns();
         updateDashboard();
         loadChatList();
+        loadPrivateChats();
       } else {
         landingView.classList.remove('hidden');
         mainAppView.classList.add('hidden');
@@ -783,8 +802,8 @@
                 <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-base sm:text-lg font-extrabold text-white">LKR ${item.price}</span></div>
                 <div class="flex gap-1 sm:gap-2">
                   ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105 touch-target"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
-                  <button onclick="startChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'} touch-target">
-                    ${isAvailable ? '💬 Chat' : 'Unavailable'}
+                  <button onclick="startOwnerChat('${item.id}', '${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'} touch-target">
+                    ${isAvailable ? '💬 Contact Owner' : 'Unavailable'}
                   </button>
                 </div>
               </div>
@@ -992,12 +1011,83 @@
       }
     }
 
-    // ========== CHAT SYSTEM - WhatsApp Style ==========
+    // ========== CHAT SYSTEM ==========
     
     function getChatId(userId1, userId2) {
       return [userId1, userId2].sort().join('_');
     }
 
+    // ========== START OWNER CHAT (Customer to Owner) ==========
+    window.startOwnerChat = async (itemId, ownerId, ownerName, itemTitle) => {
+      if (!currentUser) { alert('Please sign in first!'); return; }
+      if (ownerId === currentUser.uid) {
+        alert('You are the owner of this item!');
+        return;
+      }
+
+      const chatId = getChatId(currentUser.uid, ownerId);
+      currentChatId = chatId;
+      currentChatUser = { id: ownerId, name: ownerName };
+      currentChatWhatsApp = null;
+
+      const chatRef = doc(db, 'chats', chatId);
+      const chatSnap = await getDoc(chatRef);
+      if (!chatSnap.exists()) {
+        await setDoc(chatRef, {
+          participants: [currentUser.uid, ownerId],
+          participantNames: {
+            [currentUser.uid]: currentUser.displayName || 'User',
+            [ownerId]: ownerName || 'Owner'
+          },
+          isOwnerChat: true,
+          itemId: itemId,
+          itemTitle: itemTitle,
+          customerName: currentUser.displayName || 'User',
+          customerId: currentUser.uid,
+          lastMessage: '',
+          lastUpdated: new Date(),
+          createdAt: new Date()
+        });
+      } else {
+        // Update customer name if not set
+        const data = chatSnap.data();
+        if (!data.customerName) {
+          await updateDoc(chatRef, {
+            customerName: currentUser.displayName || 'User',
+            customerId: currentUser.uid
+          });
+        }
+      }
+
+      // Get owner's WhatsApp number from their items
+      const itemsQuery = query(collection(db, 'items'), where('ownerId', '==', ownerId));
+      const itemsSnap = await getDocs(itemsQuery);
+      itemsSnap.forEach(doc => {
+        const item = doc.data();
+        if (item.whatsapp) {
+          currentChatWhatsApp = item.whatsapp;
+        }
+      });
+
+      document.getElementById('chat-view').classList.remove('hidden');
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('chat-title').textContent = `👑 ${ownerName} - ${itemTitle}`;
+      
+      // Show WhatsApp button if available
+      const whatsappBtn = document.getElementById('chat-whatsapp-link');
+      if (currentChatWhatsApp) {
+        whatsappBtn.href = `https://wa.me/${currentChatWhatsApp}?text=Hi%20I%27m%20interested%20in%20renting%20${encodeURIComponent(itemTitle)}`;
+        whatsappBtn.classList.remove('hidden');
+      } else {
+        whatsappBtn.classList.add('hidden');
+      }
+      
+      loadChatMessages(chatId);
+      loadChatList();
+      loadPrivateChats();
+    };
+
+    // ========== START REGULAR CHAT ==========
     window.startChat = async (otherUserId, otherUserName, itemTitle) => {
       if (!currentUser) { alert('Please sign in first!'); return; }
       if (otherUserId === currentUser.uid) {
@@ -1008,6 +1098,7 @@
       const chatId = getChatId(currentUser.uid, otherUserId);
       currentChatId = chatId;
       currentChatUser = { id: otherUserId, name: otherUserName };
+      currentChatWhatsApp = null;
 
       const chatRef = doc(db, 'chats', chatId);
       const chatSnap = await getDoc(chatRef);
@@ -1029,10 +1120,94 @@
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('chat-title').textContent = `💬 ${otherUserName}`;
       
+      document.getElementById('chat-whatsapp-link').classList.add('hidden');
+      
       loadChatMessages(chatId);
       loadChatList();
+      loadPrivateChats();
     };
 
+    // ========== LOAD PRIVATE CHATS (Owner View) ==========
+    function loadPrivateChats() {
+      if (!currentUser) return;
+
+      const q = query(collection(db, 'chats'), where('participants', 'array-contains', currentUser.uid));
+      onSnapshot(q, (snapshot) => {
+        privateChatList.innerHTML = '';
+        let count = 0;
+
+        if (snapshot.empty) {
+          privateChatList.innerHTML = `
+            <div class="text-center text-slate-500 py-8 sm:py-12">
+              <i class="fa-solid fa-inbox text-3xl sm:text-5xl block mb-4 text-slate-700"></i>
+              <p class="text-sm font-medium">No private messages yet</p>
+              <p class="text-xs text-slate-600">When customers contact you about your items, they'll appear here</p>
+            </div>`;
+          privateChatCount.textContent = '0';
+          return;
+        }
+
+        const ownerChats = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.isOwnerChat === true) {
+            const otherId = data.participants.find(id => id !== currentUser.uid);
+            const otherName = data.participantNames?.[otherId] || 'User';
+            const itemTitle = data.itemTitle || 'Item';
+            const customerName = data.customerName || otherName;
+            ownerChats.push({ 
+              id: doc.id, 
+              ...data, 
+              otherId, 
+              otherName,
+              customerName,
+              itemTitle 
+            });
+          }
+        });
+
+        count = ownerChats.length;
+        privateChatCount.textContent = count;
+
+        if (ownerChats.length === 0) {
+          privateChatList.innerHTML = `
+            <div class="text-center text-slate-500 py-8 sm:py-12">
+              <i class="fa-solid fa-inbox text-3xl sm:text-5xl block mb-4 text-slate-700"></i>
+              <p class="text-sm font-medium">No private messages yet</p>
+              <p class="text-xs text-slate-600">When customers contact you about your items, they'll appear here</p>
+            </div>`;
+          return;
+        }
+
+        ownerChats.sort((a, b) => b.lastUpdated?.toDate?.() - a.lastUpdated?.toDate?.());
+
+        ownerChats.forEach(chat => {
+          privateChatList.innerHTML += `
+            <div class="glass-card rounded-2xl p-4 sm:p-5 hover:border-indigo-500/50 transition cursor-pointer private-chat-card" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.customerName}')">
+              <div class="flex items-center gap-4">
+                <div class="relative flex-shrink-0">
+                  <img src="https://ui-avatars.com/api/?name=${chat.customerName}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-amber-500 object-cover">
+                  <span class="absolute -top-1 -right-1 text-[10px] bg-amber-600 text-white rounded-full px-1.5 py-0.5">👑</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="font-bold text-white text-sm sm:text-base truncate">${chat.customerName}</h3>
+                    <span class="text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleDateString() : ''}</span>
+                  </div>
+                  <p class="text-xs text-indigo-400 truncate">📦 ${chat.itemTitle}</p>
+                  <p class="text-sm text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+                </div>
+                <div class="flex-shrink-0">
+                  <span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">${chat.lastMessage ? '💬' : '📩'}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // ========== LOAD CHAT LIST (Regular) ==========
     function loadChatList() {
       if (!currentUser) return;
 
@@ -1061,44 +1236,99 @@
 
         document.getElementById('chat-count').textContent = chats.length;
 
-        chats.forEach(chat => {
-          const isActive = chat.id === currentChatId;
-          const isOwnerChat = chat.isOwnerChat || false;
-          
+        // Show Owner Chats first (with crown icon)
+        const ownerChats = chats.filter(c => c.isOwnerChat === true);
+        const normalChats = chats.filter(c => c.isOwnerChat !== true);
+
+        if (ownerChats.length > 0) {
           chatList.innerHTML += `
-            <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
-              <div class="relative flex-shrink-0">
-                <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 ${isOwnerChat ? 'border-amber-500' : 'border-slate-700'} object-cover">
-                ${isOwnerChat ? `<span class="absolute -top-1 -right-1 text-[8px] bg-amber-600 text-white rounded-full px-1">👑</span>` : ''}
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-bold text-white truncate">${chat.otherName}</p>
-                <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
-              </div>
-              <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
-            </div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 px-2 py-1">👑 Owner Chats</div>
           `;
-        });
+          ownerChats.forEach(chat => renderChatItem(chat));
+        }
+
+        if (normalChats.length > 0) {
+          chatList.innerHTML += `
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-1 mt-1">💬 All Chats</div>
+          `;
+          normalChats.forEach(chat => renderChatItem(chat));
+        }
       });
     }
 
+    function renderChatItem(chat) {
+      const isActive = chat.id === currentChatId;
+      const isOwnerChat = chat.isOwnerChat || false;
+      const displayName = chat.isOwnerChat ? (chat.customerName || chat.otherName) : chat.otherName;
+      
+      chatList.innerHTML += `
+        <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${displayName}')">
+          <div class="relative flex-shrink-0">
+            <img src="https://ui-avatars.com/api/?name=${displayName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 ${isOwnerChat ? 'border-amber-500' : 'border-slate-700'} object-cover">
+            ${isOwnerChat ? `<span class="absolute -top-1 -right-1 text-[8px] bg-amber-600 text-white rounded-full px-1">👑</span>` : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs sm:text-sm font-bold text-white truncate">${displayName}</p>
+            <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+          </div>
+          <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
+        </div>
+      `;
+    }
+
+    // ========== OPEN CHAT BY ID ==========
     window.openChatById = (chatId, otherId, otherName) => {
       currentChatId = chatId;
       currentChatUser = { id: otherId, name: otherName };
-      document.getElementById('chat-view').classList.remove('hidden');
-      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('chat-title').textContent = `💬 ${otherName}`;
+      
+      // Check if this is an owner chat and get WhatsApp
+      const chatRef = doc(db, 'chats', chatId);
+      getDoc(chatRef).then((doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          const displayName = data.customerName || otherName;
+          const itemTitle = data.itemTitle || '';
+          
+          document.getElementById('chat-view').classList.remove('hidden');
+          document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+          document.getElementById('chat-title').textContent = data.isOwnerChat ? `👑 ${displayName} - ${itemTitle}` : `💬 ${displayName}`;
+          
+          // Check for WhatsApp number
+          const itemsQuery = query(collection(db, 'items'), where('ownerId', '==', otherId));
+          getDocs(itemsQuery).then((snap) => {
+            let whatsapp = null;
+            snap.forEach(doc => {
+              const item = doc.data();
+              if (item.whatsapp) whatsapp = item.whatsapp;
+            });
+            
+            const whatsappBtn = document.getElementById('chat-whatsapp-link');
+            if (whatsapp && data.isOwnerChat) {
+              whatsappBtn.href = `https://wa.me/${whatsapp}?text=Hi%20I%27m%20interested%20in%20renting%20${encodeURIComponent(itemTitle)}`;
+              whatsappBtn.classList.remove('hidden');
+            } else {
+              whatsappBtn.classList.add('hidden');
+            }
+          });
+        }
+      });
+      
       loadChatMessages(chatId);
       loadChatList();
+      loadPrivateChats();
     };
 
+    // ========== CLOSE CHAT ==========
     window.closeChat = () => {
       document.getElementById('chat-view').classList.add('hidden');
       currentChatId = null;
       currentChatUser = null;
+      currentChatWhatsApp = null;
+      document.getElementById('chat-whatsapp-link').classList.add('hidden');
       switchPage('home');
     };
 
+    // ========== LOAD CHAT MESSAGES ==========
     function loadChatMessages(chatId) {
       const messagesRef = collection(db, 'chats', chatId, 'messages');
       const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -1139,6 +1369,7 @@
       });
     }
 
+    // ========== REPLY SYSTEM ==========
     window.setReply = (msgId, text) => {
       replyToMessage = { id: msgId, text: text };
       document.getElementById('reply-preview').classList.remove('hidden');
@@ -1151,6 +1382,7 @@
       document.getElementById('reply-preview').classList.add('hidden');
     });
 
+    // ========== SEND MESSAGE ==========
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = msgInput.value.trim();
@@ -1179,6 +1411,7 @@
         replyToMessage = null;
         document.getElementById('reply-preview').classList.add('hidden');
         loadChatList();
+        loadPrivateChats();
       } catch (error) {
         console.error('Chat send error:', error);
         alert('Failed to send message');
@@ -1192,6 +1425,7 @@
       }
     });
 
+    // ========== DELETE CHAT ==========
     document.getElementById('chat-delete-btn').addEventListener('click', async () => {
       if (!currentUser || !currentChatId) return;
       if (!confirm('Delete all messages in this chat?')) return;
@@ -1211,14 +1445,15 @@
 
         alert('✅ Chat deleted!');
         loadChatList();
+        loadPrivateChats();
         messagesBox.innerHTML = `<div class="text-center text-slate-500 py-6 sm:py-10"><p>Chat deleted</p></div>`;
       } catch (error) {
         alert('Error deleting chat: ' + error.message);
       }
     });
 
-    console.log('✅ Rentify LK v7.0 - Mobile Friendly!');
-    console.log('📱 Features: Responsive, Touch-friendly, WhatsApp-style Chat');
+    console.log('✅ Rentify LK v8.0 - Private Chats + Customer Names!');
+    console.log('👑 Features: Owner Private Chats, Customer Names, WhatsApp Integration');
   </script>
 </body>
-</html>
+  </html>
