@@ -42,6 +42,15 @@
     .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
     .overlay.active { opacity: 1; pointer-events: all; }
     
+    /* Filter Sidebar */
+    .filter-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .filter-sidebar.open { transform: translateX(0); }
+    
+    /* Chat List */
+    .chat-list-item { transition: all 0.2s ease; cursor: pointer; }
+    .chat-list-item:hover { background: rgba(79, 70, 229, 0.1); }
+    .chat-list-item.active { background: rgba(79, 70, 229, 0.15); border-left: 3px solid #4f46e5; }
+    
     /* Chat Tabs */
     .chat-tab { padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; transition: all 0.3s; cursor: pointer; }
     .chat-tab.active { background: #4f46e5; color: white; }
@@ -50,6 +59,9 @@
     
     /* Message styling */
     .message-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
+    
+    /* Filter Close Button */
+    .filter-close-btn { position: absolute; top: 16px; right: 16px; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
@@ -90,7 +102,6 @@
     <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <!-- Hamburger Menu -->
           <button id="menu-btn" class="text-slate-400 hover:text-white text-xl sm:text-2xl transition">
             <i class="fa-solid fa-bars"></i>
           </button>
@@ -101,7 +112,6 @@
           </div>
         </div>
 
-        <!-- User Info -->
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-3 bg-slate-900/90 p-1.5 pr-4 rounded-full border border-slate-800">
             <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500 object-cover">
@@ -164,7 +174,7 @@
         </div>
 
         <!-- Search & Filter Bar -->
-        <div class="glass-card rounded-2xl p-4 sm:p-5 shadow-2xl">
+        <div class="glass-card rounded-2xl p-4 sm:p-5 shadow-2xl relative">
           <div class="flex flex-col sm:flex-row gap-3">
             <div class="flex-1 relative">
               <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
@@ -176,13 +186,15 @@
           </div>
         </div>
 
-        <!-- Filter Sidebar -->
+        <!-- FILTER SIDEBAR - Fixed with Close Button -->
         <div class="overlay fixed inset-0 z-50" id="filter-overlay"></div>
-        <div class="filter-sidebar fixed top-0 left-0 h-full w-80 sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto" id="filter-sidebar">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold"><i class="fa-solid fa-sliders-h text-indigo-400 mr-2"></i>Filters</h2>
-            <button id="filter-close-btn" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-times"></i></button>
-          </div>
+        <div class="filter-sidebar fixed top-0 left-0 h-full w-80 sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto shadow-2xl" id="filter-sidebar">
+          <!-- Close Button -->
+          <button id="filter-close-btn" class="filter-close-btn text-slate-400 hover:text-white text-2xl transition">
+            <i class="fa-solid fa-times"></i>
+          </button>
+          
+          <h2 class="text-xl font-bold mb-6"><i class="fa-solid fa-sliders-h text-indigo-400 mr-2"></i>Filters</h2>
           
           <div class="space-y-5">
             <div>
@@ -230,7 +242,6 @@
           <div><h1 class="text-2xl font-black text-white"><i class="fa-solid fa-box text-indigo-400"></i> My Items</h1><p class="text-xs text-slate-400">Manage your equipment listings</p></div>
         </div>
 
-        <!-- Add Item Form -->
         <div class="glass-card rounded-2xl p-6">
           <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-plus-circle text-indigo-400"></i> List New Equipment</h2>
           <form id="add-item-form" class="space-y-4">
@@ -250,7 +261,7 @@
             </div>
             <div>
               <input type="text" id="whatsapp" placeholder="WhatsApp Number (e.g. 94771234567)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
-              <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+' (e.g. 94771234567)</p>
+              <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+'</p>
             </div>
             <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200"></textarea>
             
@@ -308,7 +319,6 @@
               <div>
                 <label class="text-xs text-slate-400">WhatsApp Number</label>
                 <input type="text" id="edit-whatsapp" placeholder="94771234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
-                <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+'</p>
               </div>
               <div>
                 <label class="text-xs text-slate-400">Bio</label>
@@ -385,48 +395,53 @@
       </div>
 
       <!-- ===== CHAT VIEW ===== -->
-      <div id="chat-view" class="hidden max-w-3xl mx-auto glass-card rounded-2xl overflow-hidden flex flex-col h-[75vh] sm:h-[80vh] shadow-2xl">
-        <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <button onclick="closeChat()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-            <div>
-              <h2 id="chat-title" class="font-bold text-sm text-white">💬 Chat</h2>
-              <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online</span>
-            </div>
+      <div id="chat-view" class="hidden max-w-5xl mx-auto h-[80vh] flex gap-4">
+        
+        <!-- Chat List (Inbox) -->
+        <div class="w-80 glass-card rounded-2xl overflow-hidden flex flex-col">
+          <div class="p-4 bg-slate-900/90 border-b border-slate-800">
+            <h3 class="font-bold text-white text-sm"><i class="fa-solid fa-inbox text-indigo-400 mr-2"></i> Chats</h3>
           </div>
-          <div class="flex items-center gap-2">
+          <div id="chat-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+            <div class="text-center text-xs text-slate-500 py-8">No chats yet</div>
+          </div>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="flex-1 glass-card rounded-2xl overflow-hidden flex flex-col">
+          <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <button onclick="closeChat()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+              <div>
+                <h2 id="chat-title" class="font-bold text-sm text-white">💬 Select a Chat</h2>
+                <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online</span>
+              </div>
+            </div>
             <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-xs bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-lg border border-rose-500/30 transition">
               <i class="fa-solid fa-trash"></i> Delete
             </button>
           </div>
-        </div>
 
-        <!-- Chat Tabs -->
-        <div class="flex gap-2 px-4 py-2 bg-slate-900/50 border-b border-slate-800 overflow-x-auto">
-          <button class="chat-tab active" data-chat="everyone">💬 Everyone</button>
-          <button class="chat-tab" data-chat="owner">👤 Owner</button>
-          <button class="chat-tab" data-chat="private">🔒 Private</button>
-        </div>
-        
-        <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60">
-          <div class="text-center text-xs text-slate-500 py-4">✨ No messages yet. Start the conversation!</div>
-        </div>
-        
-        <!-- Reply Preview -->
-        <div id="reply-preview" class="hidden bg-slate-800/80 px-4 py-2 border-t border-slate-700 flex items-center justify-between">
-          <div class="flex-1">
-            <span class="text-xs text-indigo-400 font-bold">Replying to:</span>
-            <p id="reply-preview-text" class="text-xs text-slate-300 truncate"></p>
+          <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60">
+            <div class="text-center text-xs text-slate-500 py-10">✨ Select a chat to start messaging</div>
           </div>
-          <button id="reply-cancel-btn" class="text-slate-400 hover:text-white text-sm px-2"><i class="fa-solid fa-times"></i></button>
+          
+          <!-- Reply Preview -->
+          <div id="reply-preview" class="hidden bg-slate-800/80 px-4 py-2 border-t border-slate-700 flex items-center justify-between">
+            <div class="flex-1">
+              <span class="text-xs text-indigo-400 font-bold">Replying to:</span>
+              <p id="reply-preview-text" class="text-xs text-slate-300 truncate"></p>
+            </div>
+            <button id="reply-cancel-btn" class="text-slate-400 hover:text-white text-sm px-2"><i class="fa-solid fa-times"></i></button>
+          </div>
+          
+          <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+            <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition" required>
+            <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
         </div>
-        
-        <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
-          <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition" required>
-          <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105">
-            <i class="fa-solid fa-paper-plane"></i>
-          </button>
-        </form>
       </div>
 
     </main>
@@ -436,7 +451,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, where, deleteDoc, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, where, deleteDoc, orderBy, setDoc, getDoc, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const IMG_BB_API_KEY = "a466c482d80add89bfd3f941bac3c6fa";
 
@@ -459,9 +474,9 @@
     let currentUser = null;
     let allItems = [];
     let selectedFile = null;
-    let profileFile = null;
     let replyToMessage = null;
-    let activeChatType = 'everyone'; // 'everyone', 'owner', 'private'
+    let currentChatId = null;
+    let currentChatUser = null;
 
     const DISTRICTS = [
       'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
@@ -488,6 +503,7 @@
     const filterOverlay = document.getElementById('filter-overlay');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const chatList = document.getElementById('chat-list');
 
     // ========== AUTH ==========
     document.getElementById('google-login-btn').addEventListener('click', () => {
@@ -530,10 +546,10 @@
 
         loadItems();
         loadMyItems(user.uid);
-        loadChatMessages();
         populateDistricts();
         populateCategoryDropdowns();
         updateDashboard();
+        loadChatList();
       } else {
         landingView.classList.remove('hidden');
         mainAppView.classList.add('hidden');
@@ -618,21 +634,22 @@
     }
     window.switchPage = switchPage;
 
-    // ========== FILTER ==========
+    // ========== FILTER - FIXED ==========
     document.getElementById('filter-toggle-btn').addEventListener('click', () => {
       filterSidebar.classList.add('open');
       filterOverlay.classList.add('active');
     });
 
-    document.getElementById('filter-close-btn').addEventListener('click', () => {
-      filterSidebar.classList.remove('open');
-      filterOverlay.classList.remove('active');
+    document.getElementById('filter-close-btn').addEventListener('click', closeFilter);
+    filterOverlay.addEventListener('click', closeFilter);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeFilter();
     });
 
-    filterOverlay.addEventListener('click', () => {
+    function closeFilter() {
       filterSidebar.classList.remove('open');
       filterOverlay.classList.remove('active');
-    });
+    }
 
     document.getElementById('filter-price').addEventListener('input', (e) => {
       document.getElementById('filter-price-label').textContent = 'LKR ' + parseInt(e.target.value).toLocaleString();
@@ -640,8 +657,7 @@
 
     document.getElementById('filter-apply-btn').addEventListener('click', () => {
       applyFilters();
-      filterSidebar.classList.remove('open');
-      filterOverlay.classList.remove('active');
+      closeFilter();
     });
 
     document.getElementById('filter-reset-btn').addEventListener('click', () => {
@@ -651,8 +667,7 @@
       document.getElementById('filter-price').value = '50000';
       document.getElementById('filter-price-label').textContent = 'LKR 50,000';
       applyFilters();
-      filterSidebar.classList.remove('open');
-      filterOverlay.classList.remove('active');
+      closeFilter();
     });
 
     function applyFilters() {
@@ -710,7 +725,7 @@
                 <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-lg font-extrabold text-white">LKR ${item.price}</span></div>
                 <div class="flex gap-2">
                   ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : ''}
-                  <button onclick="openChat('${item.id}', '${item.title}', '${item.ownerId || ''}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
+                  <button onclick="startChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
                     ${isAvailable ? '💬 Chat' : 'Unavailable'}
                   </button>
                 </div>
@@ -919,85 +934,117 @@
       }
     }
 
-    // ========== CHAT SYSTEM ==========
-    let chatItemId = null;
-    let chatItemOwnerId = null;
-    let chatItemTitle = '';
+    // ========== CHAT SYSTEM - WhatsApp Style ==========
+    
+    // Generate Chat ID for two users
+    function getChatId(userId1, userId2) {
+      return [userId1, userId2].sort().join('_');
+    }
 
-    window.openChat = (itemId, title, ownerId) => {
+    // Start a chat with a user
+    window.startChat = async (otherUserId, otherUserName, itemTitle) => {
       if (!currentUser) { alert('Please sign in first!'); return; }
-      chatItemId = itemId;
-      chatItemOwnerId = ownerId;
-      chatItemTitle = title;
+      if (otherUserId === currentUser.uid) {
+        alert('You cannot chat with yourself!');
+        return;
+      }
+
+      const chatId = getChatId(currentUser.uid, otherUserId);
+      currentChatId = chatId;
+      currentChatUser = { id: otherUserId, name: otherUserName };
+
+      // Create chat document if it doesn't exist
+      const chatRef = doc(db, 'chats', chatId);
+      const chatSnap = await getDoc(chatRef);
+      if (!chatSnap.exists()) {
+        await setDoc(chatRef, {
+          participants: [currentUser.uid, otherUserId],
+          participantNames: {
+            [currentUser.uid]: currentUser.displayName || 'User',
+            [otherUserId]: otherUserName || 'User'
+          },
+          lastMessage: '',
+          lastUpdated: new Date(),
+          createdAt: new Date()
+        });
+      }
+
+      // Show chat view
       document.getElementById('chat-view').classList.remove('hidden');
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('chat-title').textContent = '💬 ' + title;
-      activeChatType = 'everyone';
-      updateChatTabs();
-      loadChatMessages();
+      document.getElementById('chat-title').textContent = `💬 Chat with ${otherUserName}`;
+      
+      loadChatMessages(chatId);
+      loadChatList();
     };
 
+    // Load Chat List (Inbox)
+    function loadChatList() {
+      if (!currentUser) return;
+
+      const q = query(collection(db, 'chats'), where('participants', 'array-contains', currentUser.uid));
+      onSnapshot(q, (snapshot) => {
+        chatList.innerHTML = '';
+        if (snapshot.empty) {
+          chatList.innerHTML = '<div class="text-center text-xs text-slate-500 py-8">No chats yet</div>';
+          return;
+        }
+
+        const chats = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const otherId = data.participants.find(id => id !== currentUser.uid);
+          const otherName = data.participantNames?.[otherId] || 'User';
+          chats.push({ id: doc.id, ...data, otherId, otherName });
+        });
+
+        // Sort by last updated
+        chats.sort((a, b) => b.lastUpdated?.toDate?.() - a.lastUpdated?.toDate?.());
+
+        chats.forEach(chat => {
+          const isActive = chat.id === currentChatId;
+          chatList.innerHTML += `
+            <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-3 flex items-center gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
+              <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-10 h-10 rounded-full border-2 border-slate-700 object-cover">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-white truncate">${chat.otherName}</p>
+                <p class="text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+              </div>
+              <span class="text-[10px] text-slate-500">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString() : ''}</span>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // Open chat by ID
+    window.openChatById = (chatId, otherId, otherName) => {
+      currentChatId = chatId;
+      currentChatUser = { id: otherId, name: otherName };
+      document.getElementById('chat-view').classList.remove('hidden');
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('chat-title').textContent = `💬 Chat with ${otherName}`;
+      loadChatMessages(chatId);
+      loadChatList();
+    };
+
+    // Close Chat
     window.closeChat = () => {
       document.getElementById('chat-view').classList.add('hidden');
+      currentChatId = null;
+      currentChatUser = null;
       switchPage('home');
     };
 
-    // Chat Tabs
-    document.querySelectorAll('.chat-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        activeChatType = tab.dataset.chat;
-        loadChatMessages();
-      });
-    });
+    // Load Chat Messages
+    function loadChatMessages(chatId) {
+      const messagesRef = collection(db, 'chats', chatId, 'messages');
+      const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
-    function updateChatTabs() {
-      document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector(`.chat-tab[data-chat="${activeChatType}"]`)?.classList.add('active');
-    }
-
-    // Delete Chat
-    document.getElementById('chat-delete-btn').addEventListener('click', async () => {
-      if (!currentUser || !chatItemId) return;
-      if (!confirm('Delete all messages in this chat?')) return;
-
-      try {
-        const chatRef = collection(db, 'chats', chatItemId, 'messages');
-        const q = query(chatRef);
-        const snapshot = await getDocs(q);
-        const batch = writeBatch(db);
-        snapshot.docs.forEach(doc => batch.delete(doc.ref));
-        await batch.commit();
-        alert('✅ Chat deleted successfully!');
-      } catch (error) {
-        alert('Error deleting chat: ' + error.message);
-      }
-    });
-
-    function loadChatMessages() {
-      const chatId = chatItemId || 'global';
-      let chatPath = `chats_${chatId}`;
-      
-      if (activeChatType === 'everyone') {
-        chatPath = `chats_${chatId}_everyone`;
-      } else if (activeChatType === 'owner') {
-        chatPath = `chats_${chatId}_owner`;
-        if (chatItemOwnerId && currentUser && currentUser.uid !== chatItemOwnerId) {
-          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><p>This is a private owner chat.</p></div>`;
-          return;
-        }
-      } else if (activeChatType === 'private') {
-        if (!currentUser) return;
-        const userIds = [currentUser.uid, chatItemOwnerId].sort();
-        chatPath = `chats_private_${userIds.join('_')}`;
-      }
-
-      const q = query(collection(db, chatPath), orderBy('timestamp', 'asc'));
       onSnapshot(q, (snapshot) => {
         messagesBox.innerHTML = '';
         if (snapshot.empty) {
-          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p></div>`;
+          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p><p class="text-xs">Start the conversation!</p></div>`;
           return;
         }
 
@@ -1047,20 +1094,7 @@
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = msgInput.value.trim();
-      if (!text || !currentUser || !chatItemId) return;
-
-      const chatId = chatItemId || 'global';
-      let chatPath = `chats_${chatId}`;
-      
-      if (activeChatType === 'everyone') {
-        chatPath = `chats_${chatId}_everyone`;
-      } else if (activeChatType === 'owner') {
-        chatPath = `chats_${chatId}_owner`;
-      } else if (activeChatType === 'private') {
-        if (!chatItemOwnerId) return;
-        const userIds = [currentUser.uid, chatItemOwnerId].sort();
-        chatPath = `chats_private_${userIds.join('_')}`;
-      }
+      if (!text || !currentUser || !currentChatId) return;
 
       try {
         const msgData = {
@@ -1074,10 +1108,18 @@
           msgData.replyTo = replyToMessage.text;
           msgData.replyToId = replyToMessage.id;
         }
-        await addDoc(collection(db, chatPath), msgData);
+        await addDoc(collection(db, 'chats', currentChatId, 'messages'), msgData);
+        
+        // Update last message in chat document
+        await updateDoc(doc(db, 'chats', currentChatId), {
+          lastMessage: text,
+          lastUpdated: new Date()
+        });
+
         msgInput.value = '';
         replyToMessage = null;
         document.getElementById('reply-preview').classList.add('hidden');
+        loadChatList();
       } catch (error) {
         console.error('Chat send error:', error);
         alert('Failed to send message');
@@ -1091,8 +1133,34 @@
       }
     });
 
-    console.log('✅ Rentify LK v5.0 - Premium P2P Rental Platform Loaded!');
-    console.log('🔥 Features: WhatsApp, Private Chat, Dashboard, Sidebar Menu, Chat Tabs');
+    // Delete Chat
+    document.getElementById('chat-delete-btn').addEventListener('click', async () => {
+      if (!currentUser || !currentChatId) return;
+      if (!confirm('Delete all messages in this chat?')) return;
+
+      try {
+        const messagesRef = collection(db, 'chats', currentChatId, 'messages');
+        const q = query(messagesRef);
+        const snapshot = await getDocs(q);
+        const batch = writeBatch(db);
+        snapshot.docs.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+        
+        await updateDoc(doc(db, 'chats', currentChatId), {
+          lastMessage: '',
+          lastUpdated: new Date()
+        });
+
+        alert('✅ Chat deleted successfully!');
+        loadChatList();
+        messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><p>Chat deleted</p></div>`;
+      } catch (error) {
+        alert('Error deleting chat: ' + error.message);
+      }
+    });
+
+    console.log('✅ Rentify LK v6.0 - WhatsApp Style Chat System Loaded!');
+    console.log('🔥 Features: Chat List, Private Chats, Reply System, Filter Fixed');
   </script>
 </body>
-    </html>
+  </html>
