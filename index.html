@@ -1,153 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rentify LK - Next-Gen Equipment Sharing</title>
+  <title>Rentify LK - Next-Gen P2P Equipment Rental Ecosystem</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 
-  <div class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none"></div>
 
-  <nav class="sticky top-0 z-50 bg-slate-900/85 backdrop-blur-md border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30">
-          ⚡
-        </div>
-        <div>
-          <span class="text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Rentify</span>
-          <span class="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span>
+  <div id="landing-view" class="flex-1 flex flex-col items-center justify-center px-4 py-12 relative z-10">
+    <div class="max-w-4xl mx-auto text-center space-y-8">
+      
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+        <i class="fa-solid fa-bolt text-amber-400"></i> Sri Lanka's Premier P2P Sharing Network
+      </div>
+
+      <h1 class="text-5xl sm:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-[1.1]">
+        Rent High-End Equipment <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Anytime, Anywhere.</span>
+      </h1>
+
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-medium">
+        Discover cameras, power tools, and professional gear from trusted owners near you. Secure, fast, and fully authenticated with Google.
+      </p>
+
+      <div class="pt-4">
+        <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-3xl max-w-md mx-auto shadow-2xl backdrop-blur-xl space-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">
+            ⚡
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white">Welcome to Rentify LK</h3>
+            <p class="text-xs text-slate-400 mt-1">Please sign in with your Google account to access the platform.</p>
+          </div>
+          <button id="google-login-btn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center gap-3 text-sm active:scale-95">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            Continue with Google
+          </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button id="login-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg shadow-indigo-600/25 flex items-center gap-2">
-          <i class="fa-brands fa-google"></i> Sign In
-        </button>
-        <div id="user-info" class="hidden flex items-center gap-3 bg-slate-800/80 p-1.5 pr-4 rounded-full border border-slate-700">
-          <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500">
-          <span id="user-name" class="font-semibold text-sm text-slate-200"></span>
-          <button onclick="switchView('dashboard')" class="ml-2 text-xs bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 px-3 py-1.5 rounded-full border border-indigo-500/40 transition font-bold">Dashboard 👑</button>
-        </div>
-      </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full z-10">
+  <div id="main-app-view" class="hidden flex-1 flex flex-col">
     
-    <div id="home-view" class="space-y-8">
-      <div class="text-center max-w-3xl mx-auto">
-        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Peer-to-Peer Rental Network</span>
-        <h1 class="text-4xl sm:text-5xl font-black mt-3 mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-tight">Rent Anything, Anywhere in Sri Lanka</h1>
-        <p class="text-slate-400 text-sm sm:text-base">Get access to high-end tools, cameras, and equipment near you without buying.</p>
-      </div>
+    <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30">
+            ⚡
+          </div>
+          <div>
+            <span class="text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Rentify</span>
+            <span class="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span>
+          </div>
+        </div>
 
-      <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-          <div class="sm:col-span-6 relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="search-input" placeholder="Search equipment..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3 bg-slate-900/90 p-1.5 pr-4 rounded-full border border-slate-800">
+            <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500 object-cover">
+            <span id="user-name" class="font-semibold text-sm text-slate-200 hidden sm:inline"></span>
+            <button onclick="switchView('dashboard')" class="ml-2 text-xs bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 px-3 py-1.5 rounded-full border border-indigo-500/40 transition font-bold">Dashboard 👑</button>
           </div>
-          <div class="sm:col-span-3">
-            <select id="location-filter" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-300">
-              <option value="All">📍 All Locations</option>
-              <option value="Colombo">Colombo</option>
-              <option value="Kandy">Kandy</option>
-              <option value="Gampaha">Gampaha</option>
-              <option value="Galle">Galle</option>
-            </select>
+          <button id="logout-btn" class="text-slate-400 hover:text-white text-sm font-bold bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl transition">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full z-10">
+      
+      <div id="home-view" class="space-y-8">
+        <div class="text-center max-w-3xl mx-auto">
+          <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Explore Inventory</span>
+          <h1 class="text-4xl sm:text-5xl font-black mt-3 mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-tight">Available Equipment</h1>
+          <p class="text-slate-400 text-sm sm:text-base">Browse items listed by verified owners across Sri Lanka.</p>
+        </div>
+
+        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-6 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input type="text" id="search-input" placeholder="Search equipment..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200">
+            </div>
+            <div class="sm:col-span-3">
+              <select id="location-filter" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-300">
+                <option value="All">📍 All Locations</option>
+                <option value="Colombo">Colombo</option>
+                <option value="Kandy">Kandy</option>
+                <option value="Gampaha">Gampaha</option>
+                <option value="Galle">Galle</option>
+              </select>
+            </div>
+            <div class="sm:col-span-3">
+              <select id="category-filter" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-300">
+                <option value="All">⚡ All Categories</option>
+                <option value="Power Tools">Power Tools</option>
+                <option value="Photography">Cameras & Gear</option>
+                <option value="Gardening">Gardening Tools</option>
+              </select>
+            </div>
           </div>
-          <div class="sm:col-span-3">
-            <select id="category-filter" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-300">
-              <option value="All">⚡ All Categories</option>
-              <option value="Power Tools">Power Tools</option>
-              <option value="Photography">Cameras & Gear</option>
-              <option value="Gardening">Gardening Tools</option>
-            </select>
-          </div>
+        </div>
+
+        <div id="items-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-96"></div>
         </div>
       </div>
 
-      <div id="items-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-slate-800/40 rounded-2xl p-4 border border-slate-700/50 animate-pulse h-96"></div>
-      </div>
-    </div>
-
-    <div id="dashboard-view" class="hidden max-w-4xl mx-auto space-y-8">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-        <div>
-          <h1 class="text-2xl font-black text-white">👑 Owner Control Center</h1>
-          <p class="text-xs text-slate-400">List and manage your tools seamlessly.</p>
+      <div id="dashboard-view" class="hidden max-w-4xl mx-auto space-y-8">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h1 class="text-2xl font-black text-white">👑 Owner Control Center</h1>
+            <p class="text-xs text-slate-400">List and manage your tools seamlessly.</p>
+          </div>
+          <button onclick="switchView('home')" class="text-xs bg-slate-900 hover:bg-slate-800 px-4 py-2 rounded-xl font-bold border border-slate-800 transition">
+            ⬅ Back to Store
+          </button>
         </div>
-        <button onclick="switchView('home')" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl font-bold border border-slate-700 transition">
-          ⬅ Back to Store
-        </button>
+
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-plus text-indigo-400"></i> List New Equipment
+          </h2>
+          <form id="add-item-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input type="text" id="title" placeholder="Equipment Name (e.g. Sony A7III)" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+              <input type="number" id="price" placeholder="Price per Day (LKR)" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <select id="location" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
+                <option value="Colombo">Colombo</option>
+                <option value="Kandy">Kandy</option>
+                <option value="Gampaha">Gampaha</option>
+                <option value="Galle">Galle</option>
+              </select>
+              <select id="category" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
+                <option value="Power Tools">Power Tools</option>
+                <option value="Photography">Cameras & Gear</option>
+                <option value="Gardening">Gardening Tools</option>
+              </select>
+            </div>
+            <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200"></textarea>
+            <input type="url" id="imageUrl" placeholder="Direct Image URL (e.g. ImgBB link)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
+              🚀 Publish Equipment
+            </button>
+          </form>
+        </div>
+
+        <h2 class="text-xl font-bold">Your Active Listings</h2>
+        <div id="my-items-list" class="space-y-4"></div>
       </div>
 
-      <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-6 backdrop-blur-md">
-        <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-plus text-indigo-400"></i> List New Equipment
-        </h2>
-        <form id="add-item-form" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input type="text" id="title" placeholder="Equipment Name (e.g. Sony A7III)" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500" required>
-            <input type="number" id="price" placeholder="Price per Day (LKR)" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500" required>
+      <div id="chat-view" class="hidden max-w-lg mx-auto bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[70vh] backdrop-blur-md">
+        <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center gap-3">
+          <button onclick="switchView('home')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
+          <div>
+            <h2 id="chat-item-title" class="font-bold text-sm text-white">Inquiry Chat</h2>
+            <span class="text-[10px] text-emerald-400">● Live Secure Messaging</span>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <select id="location" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-300">
-              <option value="Colombo">Colombo</option>
-              <option value="Kandy">Kandy</option>
-              <option value="Gampaha">Gampaha</option>
-              <option value="Galle">Galle</option>
-            </select>
-            <select id="category" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-300">
-              <option value="Power Tools">Power Tools</option>
-              <option value="Photography">Cameras & Gear</option>
-              <option value="Gardening">Gardening Tools</option>
-            </select>
-          </div>
-          <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24"></textarea>
-          <input type="url" id="imageUrl" placeholder="Direct Image URL" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500" required>
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition">
-            🚀 Publish Equipment
+        </div>
+        <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60"></div>
+        <form id="chat-form" class="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
+          <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
           </button>
         </form>
       </div>
 
-      <h2 class="text-xl font-bold">Your Active Listings</h2>
-      <div id="my-items-list" class="space-y-4"></div>
-    </div>
-
-    <div id="chat-view" class="hidden max-w-lg mx-auto bg-slate-800/60 border border-slate-700 rounded-2xl overflow-hidden flex flex-col h-[70vh] backdrop-blur-md">
-      <div class="p-4 bg-slate-800 border-b border-slate-700 flex items-center gap-3">
-        <button onclick="switchView('home')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
-        <div>
-          <h2 id="chat-item-title" class="font-bold text-sm text-white">Inquiry Chat</h2>
-          <span class="text-[10px] text-emerald-400">● Live Secure Messaging</span>
-        </div>
-      </div>
-      <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/40"></div>
-      <form id="chat-form" class="p-3 bg-slate-800 border-t border-slate-700 flex gap-2">
-        <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500" required>
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </form>
-    </div>
-
-  </main>
+    </main>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, where, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -170,6 +219,37 @@
     let allItems = [];
     let activeChatId = null;
 
+    // Google Sign-In Trigger from Landing Page
+    document.getElementById("google-login-btn").addEventListener("click", () => {
+      signInWithPopup(auth, provider).catch(err => alert(err.message));
+    });
+
+    // Logout
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        location.reload();
+      });
+    });
+
+    // Auth State Observer
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      const landingView = document.getElementById("landing-view");
+      const mainAppView = document.getElementById("main-app-view");
+
+      if (user) {
+        // Hide landing, show main dashboard/store
+        landingView.classList.add("hidden");
+        mainAppView.classList.remove("hidden");
+        document.getElementById("user-img").src = user.photoURL;
+        document.getElementById("user-name").innerText = user.displayName;
+      } else {
+        // Show landing, hide main
+        landingView.classList.remove("hidden");
+        mainAppView.classList.add("hidden");
+      }
+    });
+
     // View Switcher Function
     window.switchView = (viewName, meta = {}) => {
       document.getElementById("home-view").classList.add("hidden");
@@ -179,32 +259,15 @@
       if(viewName === 'home') {
         document.getElementById("home-view").classList.remove("hidden");
       } else if(viewName === 'dashboard') {
-        if(!currentUser) { alert("Please sign in first!"); return; }
         document.getElementById("dashboard-view").classList.remove("hidden");
         loadMyItems(currentUser.uid);
       } else if(viewName === 'chat') {
-        if(!currentUser) { alert("Please sign in first!"); return; }
         document.getElementById("chat-view").classList.remove("hidden");
         activeChatId = meta.itemId;
         document.getElementById("chat-item-title").innerText = meta.itemTitle;
         loadMessages(meta.itemId);
       }
     };
-
-    // Auth state
-    document.getElementById("login-btn").addEventListener("click", () => {
-      signInWithPopup(auth, provider).catch(err => alert(err.message));
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      if (user) {
-        document.getElementById("login-btn").classList.add("hidden");
-        document.getElementById("user-info").classList.remove("hidden");
-        document.getElementById("user-img").src = user.photoURL;
-        document.getElementById("user-name").innerText = user.displayName;
-      }
-    });
 
     // Fetch and Render Home Items
     const itemsContainer = document.getElementById("items-container");
@@ -216,17 +279,17 @@
     function renderItems(items) {
       itemsContainer.innerHTML = "";
       if(items.length === 0) {
-        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><p>No equipment found.</p></div>`;
+        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><p>No equipment found matching criteria.</p></div>`;
         return;
       }
       items.forEach(item => {
         const isAvailable = item.status === "Available";
         itemsContainer.innerHTML += `
-          <div class="group bg-slate-800/40 border border-slate-700/60 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col">
-            <div class="relative h-52 bg-slate-900">
+          <div class="group bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col shadow-xl">
+            <div class="relative h-52 bg-slate-950">
               <img src="${item.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-3 left-3 text-xs font-bold px-3 py-1 rounded-full backdrop-blur-md ${isAvailable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">● ${item.status}</span>
-              <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-slate-300 border border-slate-700">📍 ${item.location}</span>
+              <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-950/80 text-slate-300 border border-slate-800">📍 ${item.location}</span>
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
               <div>
@@ -234,9 +297,9 @@
                 <h3 class="text-lg font-bold text-white mb-1">${item.title}</h3>
                 <p class="text-slate-400 text-xs line-clamp-2 mb-4">${item.description}</p>
               </div>
-              <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
+              <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
                 <div><span class="text-xs text-slate-500 block">Per Day</span><span class="text-lg font-extrabold text-white">LKR ${item.price}</span></div>
-                <button onclick="openChat('${item.id}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-slate-700 text-slate-500 pointer-events-none'}">
+                <button onclick="openChat('${item.id}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
                   ${isAvailable ? 'Request Borrow ⚡' : 'Unavailable'}
                 </button>
               </div>
@@ -289,14 +352,18 @@
       onSnapshot(q, (snapshot) => {
         const list = document.getElementById("my-items-list");
         list.innerHTML = "";
+        if(snapshot.empty) {
+          list.innerHTML = `<p class="text-slate-500 text-xs">You haven't listed any equipment yet.</p>`;
+          return;
+        }
         snapshot.forEach((itemDoc) => {
           const item = itemDoc.data();
           const docId = itemDoc.id;
           const isAvail = item.status === "Available";
           list.innerHTML += `
-            <div class="bg-slate-800/40 border border-slate-700/60 p-4 rounded-xl flex items-center justify-between">
+            <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <img src="${item.imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-900">
+                <img src="${item.imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-950">
                 <div>
                   <h4 class="font-bold text-white">${item.title}</h4>
                   <span class="text-xs text-slate-400">LKR ${item.price} / day | 📍 ${item.location}</span>
@@ -343,7 +410,7 @@
         const box = document.getElementById("messages-box");
         box.innerHTML = "";
         if(snapshot.empty) {
-          box.innerHTML = `<p class="text-slate-600 text-center text-xs mt-10">No messages yet. Start a conversation!</p>`;
+          box.innerHTML = `<p class="text-slate-500 text-center text-xs mt-10">No inquiries yet. Start a conversation!</p>`;
           return;
         }
         snapshot.forEach((doc) => {
@@ -352,7 +419,7 @@
           box.innerHTML += `
             <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
               <span class="text-[9px] text-slate-500 mb-0.5">${msg.senderName}</span>
-              <div class="px-3.5 py-2 rounded-2xl text-xs max-w-[80%] ${isMe ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'}">
+              <div class="px-3.5 py-2 rounded-2xl text-xs max-w-[80%] ${isMe ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none'}">
                 ${msg.text}
               </div>
             </div>`;
