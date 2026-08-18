@@ -2,12 +2,15 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rentify LK - Premium P2P Equipment Rental</title>
   
   <!-- SEO -->
   <meta name="description" content="Rent high-end equipment in Sri Lanka. P2P rental platform for electronics and non-electronics.">
   <meta name="keywords" content="rent equipment sri lanka, p2p rental, camera rental, tool rental, electronics">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <!-- Fonts & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,7 +30,7 @@
   
   <style>
     * { scroll-behavior: smooth; }
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
     
@@ -37,19 +40,21 @@
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
     /* Sidebar */
-    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .sidebar.open { transform: translateX(0); }
     .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
     .overlay.active { opacity: 1; pointer-events: all; }
     
     /* Filter Sidebar */
-    .filter-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .filter-sidebar { transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .filter-sidebar.open { transform: translateX(0); }
+    .filter-close-btn { position: absolute; top: 16px; right: 16px; }
     
     /* Chat List */
     .chat-list-item { transition: all 0.2s ease; cursor: pointer; }
     .chat-list-item:hover { background: rgba(79, 70, 229, 0.1); }
     .chat-list-item.active { background: rgba(79, 70, 229, 0.15); border-left: 3px solid #4f46e5; }
+    .chat-list-item:active { transform: scale(0.98); }
     
     /* Chat Tabs */
     .chat-tab { padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; transition: all 0.3s; cursor: pointer; }
@@ -57,14 +62,47 @@
     .chat-tab:not(.active) { color: #94a3b8; background: transparent; }
     .chat-tab:not(.active):hover { color: white; background: #1e293b; }
     
-    /* Message styling */
     .message-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
     
-    /* Filter Close Button */
-    .filter-close-btn { position: absolute; top: 16px; right: 16px; }
+    /* Mobile Touch Improvements */
+    .touch-target { min-height: 44px; min-width: 44px; }
+    
+    /* Loading Shimmer */
+    .shimmer { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    
+    /* Mobile First - Chat View */
+    #chat-view { height: 100vh; max-height: 100vh; }
+    #chat-list { max-height: 180px; min-height: 100px; }
+    #messages-box { height: calc(100vh - 280px); min-height: 150px; }
+    
+    @media (min-width: 640px) {
+      #chat-view { height: 80vh; max-height: 80vh; }
+      #chat-list { max-height: none; min-height: 200px; height: 100%; }
+      #messages-box { height: calc(80vh - 180px); }
+    }
+    
+    @media (min-width: 768px) {
+      #chat-view { height: 75vh; max-height: 75vh; }
+      #messages-box { height: calc(75vh - 180px); }
+    }
+    
+    /* Mobile Bottom Nav */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(51, 65, 85, 0.5); display: flex; justify-content: space-around; padding: 6px 0 8px; }
+    .bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: #64748b; transition: color 0.2s; padding: 4px 12px; }
+    .bottom-nav button i { font-size: 20px; }
+    .bottom-nav button.active { color: #4f46e5; }
+    
+    @media (min-width: 640px) { .bottom-nav { display: none; } }
+    
+    /* Mobile Filter */
+    @media (max-width: 640px) {
+      .filter-sidebar { width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
+      .filter-sidebar .p-6 { padding: 16px !important; }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden pb-16 sm:pb-0">
 
   <!-- Background Glows -->
   <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none"></div>
@@ -76,17 +114,17 @@
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
         <i class="fa-solid fa-bolt text-amber-400"></i> Sri Lanka's Premier P2P Sharing Network
       </div>
-      <h1 class="text-5xl sm:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-[1.1]">
+      <h1 class="text-4xl sm:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-[1.1]">
         Rent Equipment <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Anytime, Anywhere.</span>
       </h1>
       <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-medium">
-        Discover electronics, tools, and professional gear from trusted owners near you. Secure & authenticated with Google.
+        Discover electronics, tools, and professional gear from trusted owners near you.
       </p>
       <div class="pt-4">
-        <div class="glass-card p-8 rounded-3xl max-w-md mx-auto shadow-2xl space-y-6">
+        <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-md mx-auto shadow-2xl space-y-6">
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">⚡</div>
-          <div><h3 class="text-xl font-bold text-white">Welcome to Rentify LK</h3><p class="text-xs text-slate-400 mt-1">Sign in with Google to access the platform</p></div>
-          <button id="google-login-btn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center gap-3 text-sm active:scale-95">
+          <div><h3 class="text-xl font-bold text-white">Welcome to Rentify LK</h3><p class="text-xs text-slate-400 mt-1">Sign in with Google</p></div>
+          <button id="google-login-btn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center gap-3 text-sm active:scale-95 touch-target">
             <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
             Continue with Google
           </button>
@@ -96,62 +134,64 @@
   </div>
 
   <!-- MAIN APP VIEW -->
-  <div id="main-app-view" class="hidden flex-1 flex-col">
+  <div id="main-app-view" class="hidden flex-1 flex-col pb-16 sm:pb-0">
     
     <!-- TOP NAVBAR -->
     <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <button id="menu-btn" class="text-slate-400 hover:text-white text-xl sm:text-2xl transition">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button id="menu-btn" class="text-slate-400 hover:text-white text-lg sm:text-2xl transition touch-target flex items-center justify-center">
             <i class="fa-solid fa-bars"></i>
           </button>
           
           <div class="flex items-center gap-2 cursor-pointer" onclick="switchPage('home')">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg shadow-indigo-500/30">⚡</div>
-            <div><span class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Rentify</span><span class="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span></div>
+            <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-sm sm:text-xl shadow-lg shadow-indigo-500/30">⚡</div>
+            <div><span class="text-base sm:text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Rentify</span><span class="text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span></div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-3 bg-slate-900/90 p-1.5 pr-4 rounded-full border border-slate-800">
-            <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500 object-cover">
-            <span id="user-name" class="font-semibold text-sm text-slate-200 hidden lg:inline"></span>
+        <div class="flex items-center gap-2 sm:gap-4">
+          <div class="flex items-center gap-2 sm:gap-3 bg-slate-900/90 p-1 pr-2 sm:pr-4 rounded-full border border-slate-800">
+            <img id="user-img" src="" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-indigo-500 object-cover">
+            <span id="user-name" class="font-semibold text-xs sm:text-sm text-slate-200 hidden md:inline"></span>
           </div>
-          <button id="logout-btn" class="text-slate-400 hover:text-white text-sm font-bold bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+          <button id="logout-btn" class="text-slate-400 hover:text-white text-xs sm:text-sm font-bold bg-slate-900 border border-slate-800 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition touch-target">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
         </div>
       </div>
     </nav>
 
     <!-- SIDEBAR MENU -->
     <div class="overlay fixed inset-0 z-50" id="sidebar-overlay"></div>
-    <div class="sidebar fixed top-0 left-0 h-full w-72 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto shadow-2xl" id="sidebar">
-      <div class="flex items-center justify-between mb-8">
+    <div class="sidebar fixed top-0 left-0 h-full w-72 sm:w-80 bg-slate-900 border-r border-slate-800 z-50 p-4 sm:p-6 overflow-y-auto shadow-2xl" id="sidebar">
+      <div class="flex items-center justify-between mb-6 sm:mb-8">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-sm">⚡</div>
           <span class="text-lg font-extrabold text-white">Rentify <span class="text-indigo-400">LK</span></span>
         </div>
-        <button id="sidebar-close-btn" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-times"></i></button>
+        <button id="sidebar-close-btn" class="text-slate-400 hover:text-white text-xl touch-target"><i class="fa-solid fa-times"></i></button>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <button class="sidebar-nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600/20 text-indigo-400" data-page="home">
+      <div class="flex flex-col gap-1 sm:gap-2">
+        <button class="sidebar-nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600/20 text-indigo-400 touch-target" data-page="home">
           <i class="fa-solid fa-home w-5"></i> <span>Home</span>
         </button>
-        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="myitems">
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="myitems">
           <i class="fa-solid fa-box w-5"></i> <span>My Items</span>
         </button>
-        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="account">
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="account">
           <i class="fa-solid fa-user w-5"></i> <span>Account</span>
         </button>
-        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="about">
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="about">
           <i class="fa-solid fa-info-circle w-5"></i> <span>About</span>
         </button>
-        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="dashboard">
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition touch-target" data-page="dashboard">
           <i class="fa-solid fa-gem w-5"></i> <span>Dashboard</span>
         </button>
       </div>
 
-      <div class="border-t border-slate-800 mt-8 pt-6">
+      <div class="border-t border-slate-800 mt-6 sm:mt-8 pt-6">
         <div class="flex items-center gap-3 px-4">
           <img id="sidebar-user-img" src="" class="w-10 h-10 rounded-full border-2 border-indigo-500 object-cover">
           <div>
@@ -163,49 +203,45 @@
     </div>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full z-10">
+    <main class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 w-full z-10 pb-20 sm:pb-6">
       
       <!-- ===== PAGE: HOME ===== -->
-      <div id="page-home" class="page-content space-y-6">
-        <div class="text-center max-w-3xl mx-auto py-4">
-          <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Explore Inventory</span>
-          <h1 class="text-3xl sm:text-5xl font-black mt-3 mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-tight">Find Your Perfect Equipment</h1>
-          <p class="text-slate-400 text-sm sm:text-base">Browse items listed by verified owners across all 25 districts of Sri Lanka.</p>
+      <div id="page-home" class="page-content space-y-4 sm:space-y-6">
+        <div class="text-center max-w-3xl mx-auto py-2 sm:py-4">
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Explore</span>
+          <h1 class="text-2xl sm:text-5xl font-black mt-2 sm:mt-3 mb-2 sm:mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-tight">Find Your Perfect Equipment</h1>
+          <p class="text-slate-400 text-xs sm:text-base">Browse items across all 25 districts of Sri Lanka.</p>
         </div>
 
         <!-- Search & Filter Bar -->
-        <div class="glass-card rounded-2xl p-4 sm:p-5 shadow-2xl relative">
-          <div class="flex flex-col sm:flex-row gap-3">
+        <div class="glass-card rounded-2xl p-3 sm:p-5 shadow-2xl relative">
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div class="flex-1 relative">
-              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-              <input type="text" id="search-input" placeholder="Search equipment..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+              <input type="text" id="search-input" placeholder="Search equipment..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200 touch-target">
             </div>
-            <button id="filter-toggle-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition whitespace-nowrap">
-              <i class="fa-solid fa-sliders-h"></i> Filters
+            <button id="filter-toggle-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition touch-target">
+              <i class="fa-solid fa-sliders-h"></i> <span class="hidden xs:inline">Filters</span>
             </button>
           </div>
         </div>
 
-        <!-- FILTER SIDEBAR - Fixed with Close Button -->
+        <!-- FILTER SIDEBAR -->
         <div class="overlay fixed inset-0 z-50" id="filter-overlay"></div>
-        <div class="filter-sidebar fixed top-0 left-0 h-full w-80 sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto shadow-2xl" id="filter-sidebar">
-          <!-- Close Button -->
-          <button id="filter-close-btn" class="filter-close-btn text-slate-400 hover:text-white text-2xl transition">
+        <div class="filter-sidebar fixed top-0 left-0 h-full w-full sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-4 sm:p-6 overflow-y-auto shadow-2xl" id="filter-sidebar">
+          <button id="filter-close-btn" class="text-slate-400 hover:text-white text-2xl transition touch-target float-right">
             <i class="fa-solid fa-times"></i>
           </button>
+          <h2 class="text-xl font-bold mt-2"><i class="fa-solid fa-sliders-h text-indigo-400 mr-2"></i>Filters</h2>
           
-          <h2 class="text-xl font-bold mb-6"><i class="fa-solid fa-sliders-h text-indigo-400 mr-2"></i>Filters</h2>
-          
-          <div class="space-y-5">
+          <div class="space-y-4 sm:space-y-5 mt-4">
             <div>
               <label class="text-xs font-bold uppercase tracking-wider text-slate-400">District</label>
-              <select id="filter-district" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
-                <option value="All">All Districts</option>
-              </select>
+              <select id="filter-district" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1 touch-target"></select>
             </div>
             <div>
               <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Category</label>
-              <select id="filter-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
+              <select id="filter-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1 touch-target">
                 <option value="All">All Categories</option>
                 <option value="Electronics">📱 Electronics</option>
                 <option value="Non-Electronics">🔧 Non-Electronics</option>
@@ -213,97 +249,97 @@
             </div>
             <div>
               <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Sub-Category</label>
-              <select id="filter-subcategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
+              <select id="filter-subcategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1 touch-target">
                 <option value="All">All Sub-Categories</option>
               </select>
             </div>
             <div>
               <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Max Price (LKR)</label>
-              <input type="range" id="filter-price" min="0" max="50000" step="500" value="50000" class="w-full mt-2 accent-indigo-500">
+              <input type="range" id="filter-price" min="0" max="50000" step="500" value="50000" class="w-full mt-2 accent-indigo-500 touch-target">
               <div class="flex justify-between text-xs text-slate-400 mt-1"><span>LKR 0</span><span id="filter-price-label">LKR 50,000</span></div>
             </div>
-            <button id="filter-apply-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3 rounded-xl font-bold text-sm transition">Apply Filters</button>
-            <button id="filter-reset-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-sm transition">Reset All</button>
+            <button id="filter-apply-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3 rounded-xl font-bold text-sm transition touch-target">Apply Filters</button>
+            <button id="filter-reset-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-sm transition touch-target">Reset All</button>
           </div>
         </div>
 
         <!-- Items Grid -->
-        <div id="items-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
-          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
-          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
-          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
+        <div id="items-container" class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-72 sm:h-80"></div>
         </div>
       </div>
 
       <!-- ===== PAGE: MY ITEMS ===== -->
-      <div id="page-myitems" class="page-content hidden max-w-4xl mx-auto space-y-8">
+      <div id="page-myitems" class="page-content hidden max-w-4xl mx-auto space-y-6 sm:space-y-8">
         <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div><h1 class="text-2xl font-black text-white"><i class="fa-solid fa-box text-indigo-400"></i> My Items</h1><p class="text-xs text-slate-400">Manage your equipment listings</p></div>
+          <div><h1 class="text-xl sm:text-2xl font-black text-white"><i class="fa-solid fa-box text-indigo-400"></i> My Items</h1><p class="text-xs text-slate-400">Manage your listings</p></div>
         </div>
 
-        <div class="glass-card rounded-2xl p-6">
-          <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-plus-circle text-indigo-400"></i> List New Equipment</h2>
-          <form id="add-item-form" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input type="text" id="title" placeholder="Equipment Name" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
-              <input type="number" id="price" placeholder="Price per Day (LKR)" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+        <div class="glass-card rounded-2xl p-4 sm:p-6">
+          <h2 class="text-base sm:text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-plus-circle text-indigo-400"></i> List New Equipment</h2>
+          <form id="add-item-form" class="space-y-3 sm:space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <input type="text" id="title" placeholder="Equipment Name" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target" required>
+              <input type="number" id="price" placeholder="Price per Day (LKR)" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target" required>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <select id="location" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300"></select>
-              <select id="category" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <select id="location" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300 touch-target"></select>
+              <select id="category" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300 touch-target">
                 <option value="Electronics">📱 Electronics</option>
                 <option value="Non-Electronics">🔧 Non-Electronics</option>
               </select>
-              <select id="subcategory" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
-                <option value="">Select Sub-Category</option>
+              <select id="subcategory" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300 touch-target">
+                <option value="">Sub-Category</option>
               </select>
             </div>
             <div>
-              <input type="text" id="whatsapp" placeholder="WhatsApp Number (e.g. 94771234567)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+              <input type="text" id="whatsapp" placeholder="WhatsApp Number (e.g. 94771234567)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target">
               <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+'</p>
             </div>
-            <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200"></textarea>
+            <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200 touch-target"></textarea>
             
-            <div class="upload-zone bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl p-6 text-center transition cursor-pointer" id="upload-zone">
+            <div class="upload-zone bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl p-4 sm:p-6 text-center transition cursor-pointer touch-target" id="upload-zone">
               <input type="file" id="image-upload" accept="image/*" class="hidden">
-              <i class="fa-solid fa-cloud-upload-alt text-4xl text-slate-600"></i>
-              <p class="text-sm text-slate-400 mt-2 font-medium">Click to upload equipment image</p>
+              <i class="fa-solid fa-cloud-upload-alt text-3xl sm:text-4xl text-slate-600"></i>
+              <p class="text-sm text-slate-400 mt-2 font-medium">Click to upload image</p>
               <p class="text-xs text-slate-500">PNG, JPG, WEBP (Max 32MB)</p>
               <div id="upload-preview" class="mt-3 hidden">
-                <img id="preview-img" class="max-h-48 mx-auto rounded-lg border border-slate-700 shadow-lg">
-                <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check-circle"></i> Image uploaded!</p>
+                <img id="preview-img" class="max-h-40 sm:max-h-48 mx-auto rounded-lg border border-slate-700 shadow-lg">
+                <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check-circle"></i> Uploaded!</p>
               </div>
             </div>
 
-            <button type="submit" id="publish-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" id="publish-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed touch-target">
               🚀 Publish Equipment
             </button>
           </form>
         </div>
 
-        <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-list text-indigo-400"></i> Your Active Listings</h2>
-        <div id="my-items-list" class="space-y-4"></div>
+        <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-list text-indigo-400"></i> Your Active Listings</h2>
+        <div id="my-items-list" class="space-y-3 sm:space-y-4"></div>
       </div>
 
       <!-- ===== PAGE: ACCOUNT ===== -->
-      <div id="page-account" class="page-content hidden max-w-3xl mx-auto space-y-8">
+      <div id="page-account" class="page-content hidden max-w-3xl mx-auto space-y-6 sm:space-y-8">
         <div class="pb-4 border-b border-slate-800">
-          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-user text-indigo-400"></i> My Account</h1>
-          <p class="text-xs text-slate-400">Manage your profile and settings</p>
+          <h1 class="text-xl sm:text-2xl font-black text-white"><i class="fa-solid fa-user text-indigo-400"></i> My Account</h1>
+          <p class="text-xs text-slate-400">Manage your profile</p>
         </div>
 
-        <div class="glass-card rounded-2xl p-6 space-y-6">
-          <div class="flex flex-col sm:flex-row items-center gap-6">
+        <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-6">
+          <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             <div class="relative">
-              <img id="profile-photo" src="" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-indigo-500 object-cover bg-slate-800">
-              <button id="profile-photo-btn" class="absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded-full text-xs transition shadow-lg shadow-indigo-600/30">
+              <img id="profile-photo" src="" class="w-20 h-20 sm:w-32 sm:h-32 rounded-full border-4 border-indigo-500 object-cover bg-slate-800">
+              <button id="profile-photo-btn" class="absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded-full text-xs transition shadow-lg shadow-indigo-600/30 touch-target">
                 <i class="fa-solid fa-camera"></i>
               </button>
               <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
             </div>
             <div class="text-center sm:text-left">
-              <h2 id="profile-display-name" class="text-xl font-bold text-white">User</h2>
+              <h2 id="profile-display-name" class="text-lg sm:text-xl font-bold text-white">User</h2>
               <p class="text-sm text-slate-400" id="profile-email">email@example.com</p>
               <p class="text-xs text-slate-500 mt-1">Joined: <span id="profile-joined">Today</span></p>
             </div>
@@ -314,38 +350,38 @@
             <div class="space-y-4">
               <div>
                 <label class="text-xs text-slate-400">Display Name</label>
-                <input type="text" id="edit-display-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+                <input type="text" id="edit-display-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target">
               </div>
               <div>
                 <label class="text-xs text-slate-400">WhatsApp Number</label>
-                <input type="text" id="edit-whatsapp" placeholder="94771234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+                <input type="text" id="edit-whatsapp" placeholder="94771234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target">
               </div>
               <div>
                 <label class="text-xs text-slate-400">Bio</label>
-                <textarea id="edit-bio" rows="3" placeholder="Tell us about yourself..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200"></textarea>
+                <textarea id="edit-bio" rows="3" placeholder="Tell us about yourself..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 touch-target"></textarea>
               </div>
-              <button id="save-profile-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition">Save Profile</button>
+              <button id="save-profile-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition touch-target">Save Profile</button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ===== PAGE: ABOUT ===== -->
-      <div id="page-about" class="page-content hidden max-w-3xl mx-auto space-y-8">
+      <div id="page-about" class="page-content hidden max-w-3xl mx-auto space-y-6 sm:space-y-8">
         <div class="pb-4 border-b border-slate-800">
-          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-info-circle text-indigo-400"></i> About Us</h1>
+          <h1 class="text-xl sm:text-2xl font-black text-white"><i class="fa-solid fa-info-circle text-indigo-400"></i> About Us</h1>
           <p class="text-xs text-slate-400">Learn more about Rentify LK</p>
         </div>
 
-        <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-6">
           <div class="text-center">
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">⚡</div>
-            <h2 class="text-2xl font-bold text-white mt-3">Rentify LK</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-white mt-3">Rentify LK</h2>
             <p class="text-sm text-slate-400">Sri Lanka's Premier P2P Equipment Rental Platform</p>
           </div>
 
           <div class="border-t border-slate-800 pt-4 space-y-3 text-sm text-slate-300 leading-relaxed">
-            <p><strong class="text-white">Rentify LK</strong> is a peer-to-peer rental platform that connects equipment owners with people who need to rent high-quality tools, electronics, and gear across Sri Lanka.</p>
+            <p><strong class="text-white">Rentify LK</strong> connects equipment owners with people who need to rent quality tools, electronics, and gear across Sri Lanka.</p>
             <p>Our mission is to make equipment rental <strong class="text-white">accessible, affordable, and trustworthy</strong> for everyone.</p>
           </div>
 
@@ -359,34 +395,34 @@
           </div>
 
           <div class="text-center text-[10px] text-slate-500 pt-2 border-t border-slate-800">
-            © 2026 Rentify LK. All rights reserved. Made with ❤️ in Sri Lanka.
+            © 2026 Rentify LK. All rights reserved.
           </div>
         </div>
       </div>
 
       <!-- ===== PAGE: DASHBOARD ===== -->
-      <div id="page-dashboard" class="page-content hidden max-w-4xl mx-auto space-y-8">
+      <div id="page-dashboard" class="page-content hidden max-w-4xl mx-auto space-y-6 sm:space-y-8">
         <div class="pb-4 border-b border-slate-800">
-          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-gem text-amber-400"></i> Dashboard</h1>
+          <h1 class="text-xl sm:text-2xl font-black text-white"><i class="fa-solid fa-gem text-amber-400"></i> Dashboard</h1>
           <p class="text-xs text-slate-400">Overview of your activity</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="glass-card rounded-2xl p-6 text-center">
-            <p class="text-3xl font-black text-indigo-400" id="dash-items">0</p>
-            <p class="text-xs text-slate-400">Total Items</p>
+        <div class="grid grid-cols-3 gap-3 sm:gap-4">
+          <div class="glass-card rounded-2xl p-4 sm:p-6 text-center">
+            <p class="text-2xl sm:text-3xl font-black text-indigo-400" id="dash-items">0</p>
+            <p class="text-[10px] sm:text-xs text-slate-400">Total Items</p>
           </div>
-          <div class="glass-card rounded-2xl p-6 text-center">
-            <p class="text-3xl font-black text-emerald-400" id="dash-available">0</p>
-            <p class="text-xs text-slate-400">Available</p>
+          <div class="glass-card rounded-2xl p-4 sm:p-6 text-center">
+            <p class="text-2xl sm:text-3xl font-black text-emerald-400" id="dash-available">0</p>
+            <p class="text-[10px] sm:text-xs text-slate-400">Available</p>
           </div>
-          <div class="glass-card rounded-2xl p-6 text-center">
-            <p class="text-3xl font-black text-amber-400" id="dash-rented">0</p>
-            <p class="text-xs text-slate-400">Currently Rented</p>
+          <div class="glass-card rounded-2xl p-4 sm:p-6 text-center">
+            <p class="text-2xl sm:text-3xl font-black text-amber-400" id="dash-rented">0</p>
+            <p class="text-[10px] sm:text-xs text-slate-400">Rented</p>
           </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-6">
+        <div class="glass-card rounded-2xl p-4 sm:p-6">
           <h3 class="font-bold text-sm text-slate-300 mb-4"><i class="fa-solid fa-clock text-indigo-400 mr-2"></i> Recent Activity</h3>
           <div id="dash-activity" class="space-y-2 text-sm text-slate-400">
             <p class="text-center text-xs py-4">No recent activity</p>
@@ -394,50 +430,55 @@
         </div>
       </div>
 
-      <!-- ===== CHAT VIEW ===== -->
-      <div id="chat-view" class="hidden max-w-5xl mx-auto h-[80vh] flex gap-4">
+      <!-- ===== CHAT VIEW - MOBILE FRIENDLY ===== -->
+      <div id="chat-view" class="hidden w-full flex flex-col sm:flex-row gap-2 sm:gap-4">
         
-        <!-- Chat List (Inbox) -->
-        <div class="w-80 glass-card rounded-2xl overflow-hidden flex flex-col">
-          <div class="p-4 bg-slate-900/90 border-b border-slate-800">
-            <h3 class="font-bold text-white text-sm"><i class="fa-solid fa-inbox text-indigo-400 mr-2"></i> Chats</h3>
+        <!-- Chat List -->
+        <div class="w-full sm:w-72 md:w-80 glass-card rounded-2xl overflow-hidden flex flex-col" style="max-height: 180px; min-height: 100px; sm:max-height: none; sm:min-height: 200px;">
+          <div class="p-2 sm:p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <h3 class="font-bold text-white text-xs sm:text-sm"><i class="fa-solid fa-inbox text-indigo-400 mr-1 sm:mr-2"></i> <span class="hidden xs:inline">Chats</span></h3>
+            <span class="text-[10px] text-slate-400 sm:hidden" id="chat-count">0</span>
           </div>
-          <div id="chat-list" class="flex-1 overflow-y-auto p-2 space-y-1">
-            <div class="text-center text-xs text-slate-500 py-8">No chats yet</div>
+          <div id="chat-list" class="flex-1 overflow-y-auto p-1 sm:p-2 space-y-0.5 sm:space-y-1">
+            <div class="text-center text-xs text-slate-500 py-4 sm:py-8">No chats yet</div>
           </div>
         </div>
 
         <!-- Chat Window -->
-        <div class="flex-1 glass-card rounded-2xl overflow-hidden flex flex-col">
-          <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <button onclick="closeChat()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-              <div>
-                <h2 id="chat-title" class="font-bold text-sm text-white">💬 Select a Chat</h2>
-                <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online</span>
+        <div class="flex-1 glass-card rounded-2xl overflow-hidden flex flex-col" style="height: calc(100vh - 280px); min-height: 200px; sm:height: auto;">
+          <div class="p-2 sm:p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+              <button onclick="closeChat()" class="text-slate-400 hover:text-white transition p-1.5 sm:p-2 touch-target">
+                <i class="fa-solid fa-arrow-left text-sm sm:text-lg"></i>
+              </button>
+              <div class="min-w-0">
+                <h2 id="chat-title" class="font-bold text-xs sm:text-sm text-white truncate">💬 Select a Chat</h2>
+                <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online
+                </span>
               </div>
             </div>
-            <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-xs bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-lg border border-rose-500/30 transition">
-              <i class="fa-solid fa-trash"></i> Delete
+            <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-[10px] sm:text-xs bg-rose-500/10 hover:bg-rose-500/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-rose-500/30 transition touch-target">
+              <i class="fa-solid fa-trash"></i>
             </button>
           </div>
 
-          <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60">
-            <div class="text-center text-xs text-slate-500 py-10">✨ Select a chat to start messaging</div>
+          <div id="messages-box" class="flex-1 p-3 sm:p-4 overflow-y-auto space-y-2 sm:space-y-3 bg-slate-950/60">
+            <div class="text-center text-xs text-slate-500 py-6 sm:py-10">✨ Select a chat to start</div>
           </div>
           
           <!-- Reply Preview -->
-          <div id="reply-preview" class="hidden bg-slate-800/80 px-4 py-2 border-t border-slate-700 flex items-center justify-between">
-            <div class="flex-1">
-              <span class="text-xs text-indigo-400 font-bold">Replying to:</span>
+          <div id="reply-preview" class="hidden bg-slate-800/80 px-3 sm:px-4 py-2 border-t border-slate-700 flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <span class="text-[10px] sm:text-xs text-indigo-400 font-bold">Replying to:</span>
               <p id="reply-preview-text" class="text-xs text-slate-300 truncate"></p>
             </div>
-            <button id="reply-cancel-btn" class="text-slate-400 hover:text-white text-sm px-2"><i class="fa-solid fa-times"></i></button>
+            <button id="reply-cancel-btn" class="text-slate-400 hover:text-white text-sm px-2 touch-target"><i class="fa-solid fa-times"></i></button>
           </div>
           
-          <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
-            <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition" required>
-            <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105">
+          <form id="chat-form" class="p-2 sm:p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+            <input type="text" id="msg-input" placeholder="Type a message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition touch-target" required>
+            <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105 touch-target">
               <i class="fa-solid fa-paper-plane"></i>
             </button>
           </form>
@@ -445,6 +486,14 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <div class="bottom-nav sm:hidden">
+    <button class="active" data-page="home"><i class="fa-solid fa-home"></i> Home</button>
+    <button data-page="myitems"><i class="fa-solid fa-box"></i> Items</button>
+    <button data-page="account"><i class="fa-solid fa-user"></i> Account</button>
+    <button data-page="dashboard"><i class="fa-solid fa-gem"></i> Dashboard</button>
   </div>
 
   <!-- ===== FIREBASE ===== -->
@@ -570,15 +619,24 @@
       sidebarOverlay.classList.remove('active');
     }
 
-    document.querySelectorAll('.sidebar-nav-item').forEach(el => {
+    document.querySelectorAll('.sidebar-nav-item, .bottom-nav button').forEach(el => {
       el.addEventListener('click', () => {
         const page = el.dataset.page;
+        if (!page) return;
+        
         document.querySelectorAll('.sidebar-nav-item').forEach(e => {
           e.classList.remove('active', 'bg-indigo-600/20', 'text-indigo-400');
           e.classList.add('text-slate-400');
         });
-        el.classList.add('active', 'bg-indigo-600/20', 'text-indigo-400');
-        el.classList.remove('text-slate-400');
+        document.querySelectorAll('.bottom-nav button').forEach(e => e.classList.remove('active'));
+        
+        if (el.classList.contains('sidebar-nav-item')) {
+          el.classList.add('active', 'bg-indigo-600/20', 'text-indigo-400');
+          el.classList.remove('text-slate-400');
+        } else {
+          el.classList.add('active');
+        }
+        
         closeChat();
         switchPage(page);
         closeSidebar();
@@ -634,7 +692,7 @@
     }
     window.switchPage = switchPage;
 
-    // ========== FILTER - FIXED ==========
+    // ========== FILTER ==========
     document.getElementById('filter-toggle-btn').addEventListener('click', () => {
       filterSidebar.classList.add('open');
       filterOverlay.classList.add('active');
@@ -698,7 +756,7 @@
     function renderItems(items) {
       itemsContainer.innerHTML = '';
       if (items.length === 0) {
-        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><i class="fa-solid fa-box-open text-4xl mb-3 block"></i><p>No equipment found.</p></div>`;
+        itemsContainer.innerHTML = `<div class="col-span-full text-center py-10 sm:py-16 text-slate-500"><i class="fa-solid fa-box-open text-3xl sm:text-4xl mb-3 block"></i><p class="text-sm">No equipment found.</p></div>`;
         return;
       }
 
@@ -709,23 +767,23 @@
 
         itemsContainer.innerHTML += `
           <div class="item-card bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col shadow-xl hover-glow">
-            <div class="relative h-48 bg-slate-950 overflow-hidden">
+            <div class="relative h-48 sm:h-52 bg-slate-950 overflow-hidden">
               <img src="${item.imageUrl || 'https://via.placeholder.com/400x300/1e293b/4f46e5?text=No+Image'}" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://via.placeholder.com/400x300/1e293b/4f46e5?text=No+Image'">
-              <span class="absolute top-3 left-3 text-xs font-bold px-3 py-1 rounded-full backdrop-blur-md ${isAvailable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">● ${item.status}</span>
-              <span class="absolute top-3 right-3 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-slate-950/80 text-slate-300 border border-slate-800">📍 ${item.location}</span>
-              ${item.subcategory ? `<span class="absolute bottom-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${item.subcategory}</span>` : ''}
+              <span class="absolute top-2 sm:top-3 left-2 sm:left-3 text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full backdrop-blur-md ${isAvailable ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">● ${item.status}</span>
+              <span class="absolute top-2 sm:top-3 right-2 sm:right-3 text-[10px] font-semibold px-2 py-0.5 sm:py-1 rounded-full bg-slate-950/80 text-slate-300 border border-slate-800">📍 ${item.location}</span>
+              ${item.subcategory ? `<span class="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 text-[10px] font-bold px-2 py-0.5 sm:py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">${item.subcategory}</span>` : ''}
             </div>
-            <div class="p-4 flex-1 flex flex-col justify-between">
+            <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
               <div>
                 <span class="text-[10px] font-bold tracking-wider uppercase text-indigo-400">${item.category || 'Tool'}</span>
-                <h3 class="text-base font-bold text-white mb-1">${item.title}</h3>
-                <p class="text-slate-400 text-xs line-clamp-2 mb-3">${item.description || 'No description'}</p>
+                <h3 class="text-sm sm:text-base font-bold text-white mb-1">${item.title}</h3>
+                <p class="text-slate-400 text-xs line-clamp-2 mb-2 sm:mb-3">${item.description || 'No description'}</p>
               </div>
-              <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
-                <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-lg font-extrabold text-white">LKR ${item.price}</span></div>
-                <div class="flex gap-2">
-                  ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : ''}
-                  <button onclick="startChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
+              <div class="pt-2 sm:pt-3 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
+                <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-base sm:text-lg font-extrabold text-white">LKR ${item.price}</span></div>
+                <div class="flex gap-1 sm:gap-2">
+                  ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105 touch-target"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                  <button onclick="startChat('${item.ownerId}', '${item.ownerName || 'Owner'}', '${item.title}')" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'} touch-target">
                     ${isAvailable ? '💬 Chat' : 'Unavailable'}
                   </button>
                 </div>
@@ -870,7 +928,7 @@
         const list = document.getElementById('my-items-list');
         list.innerHTML = '';
         if (snapshot.empty) {
-          list.innerHTML = `<div class="text-center py-8 text-slate-500"><i class="fa-solid fa-box-open text-3xl mb-2 block"></i><p>You haven't listed any equipment yet.</p></div>`;
+          list.innerHTML = `<div class="text-center py-8 text-slate-500"><i class="fa-solid fa-box-open text-2xl sm:text-3xl mb-2 block"></i><p class="text-sm">You haven't listed any equipment yet.</p></div>`;
           return;
         }
         snapshot.forEach((itemDoc) => {
@@ -880,21 +938,21 @@
           const whatsappLink = item.whatsapp ? `https://wa.me/${item.whatsapp}?text=Hi%20I%27m%20interested%20in%20renting%20${encodeURIComponent(item.title)}` : '';
 
           list.innerHTML += `
-            <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-indigo-500/30 transition">
-              <div class="flex items-center gap-4">
-                <img src="${item.imageUrl || 'https://via.placeholder.com/60/1e293b/4f46e5?text=No+Image'}" class="w-14 h-14 rounded-lg object-cover bg-slate-950 border border-slate-700">
-                <div>
-                  <h4 class="font-bold text-white text-sm">${item.title}</h4>
+            <div class="bg-slate-900/60 border border-slate-800 p-3 sm:p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between hover:border-indigo-500/30 transition gap-3 sm:gap-4">
+              <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                <img src="${item.imageUrl || 'https://via.placeholder.com/60/1e293b/4f46e5?text=No+Image'}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover bg-slate-950 border border-slate-700 flex-shrink-0">
+                <div class="min-w-0 flex-1">
+                  <h4 class="font-bold text-white text-sm truncate">${item.title}</h4>
                   <span class="text-xs text-slate-400">LKR ${item.price} / day | 📍 ${item.location}</span>
                   <span class="text-xs ${isAvail ? 'text-emerald-400' : 'text-rose-400'} block">${item.status}</span>
                 </div>
               </div>
-              <div class="flex gap-2 flex-wrap">
-                ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
-                <button onclick="toggleStatus('${docId}', '${item.status}')" class="px-3 py-1.5 text-xs font-bold rounded-lg ${isAvail ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'} text-white transition">
-                  ${isAvail ? '📌 Mark Rented' : '✅ Mark Available'}
+              <div class="flex gap-2 flex-wrap w-full sm:w-auto justify-end">
+                ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition touch-target"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                <button onclick="toggleStatus('${docId}', '${item.status}')" class="px-3 py-1.5 text-xs font-bold rounded-lg ${isAvail ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'} text-white transition touch-target">
+                  ${isAvail ? '📌 Rent' : '✅ Available'}
                 </button>
-                <button onclick="deleteItem('${docId}')" class="px-3 py-1.5 text-xs font-bold bg-rose-600/20 hover:bg-rose-600 text-rose-300 rounded-lg transition border border-rose-500/30">
+                <button onclick="deleteItem('${docId}')" class="px-3 py-1.5 text-xs font-bold bg-rose-600/20 hover:bg-rose-600 text-rose-300 rounded-lg transition border border-rose-500/30 touch-target">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
@@ -923,11 +981,11 @@
 
       const activity = document.getElementById('dash-activity');
       if (userItems.length === 0) {
-        activity.innerHTML = '<p class="text-center text-xs py-4 text-slate-500">No activity yet. Start listing your items!</p>';
+        activity.innerHTML = '<p class="text-center text-xs py-4 text-slate-500">No activity yet.</p>';
       } else {
         activity.innerHTML = userItems.slice(0, 5).map(item => `
           <div class="flex justify-between items-center py-2 border-b border-slate-800/50">
-            <span class="text-sm text-slate-300">${item.title}</span>
+            <span class="text-sm text-slate-300 truncate">${item.title}</span>
             <span class="text-xs ${item.status === 'Available' ? 'text-emerald-400' : 'text-amber-400'}">${item.status}</span>
           </div>
         `).join('');
@@ -936,12 +994,10 @@
 
     // ========== CHAT SYSTEM - WhatsApp Style ==========
     
-    // Generate Chat ID for two users
     function getChatId(userId1, userId2) {
       return [userId1, userId2].sort().join('_');
     }
 
-    // Start a chat with a user
     window.startChat = async (otherUserId, otherUserName, itemTitle) => {
       if (!currentUser) { alert('Please sign in first!'); return; }
       if (otherUserId === currentUser.uid) {
@@ -953,7 +1009,6 @@
       currentChatId = chatId;
       currentChatUser = { id: otherUserId, name: otherUserName };
 
-      // Create chat document if it doesn't exist
       const chatRef = doc(db, 'chats', chatId);
       const chatSnap = await getDoc(chatRef);
       if (!chatSnap.exists()) {
@@ -963,22 +1018,21 @@
             [currentUser.uid]: currentUser.displayName || 'User',
             [otherUserId]: otherUserName || 'User'
           },
+          isOwnerChat: false,
           lastMessage: '',
           lastUpdated: new Date(),
           createdAt: new Date()
         });
       }
 
-      // Show chat view
       document.getElementById('chat-view').classList.remove('hidden');
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('chat-title').textContent = `💬 Chat with ${otherUserName}`;
+      document.getElementById('chat-title').textContent = `💬 ${otherUserName}`;
       
       loadChatMessages(chatId);
       loadChatList();
     };
 
-    // Load Chat List (Inbox)
     function loadChatList() {
       if (!currentUser) return;
 
@@ -986,7 +1040,12 @@
       onSnapshot(q, (snapshot) => {
         chatList.innerHTML = '';
         if (snapshot.empty) {
-          chatList.innerHTML = '<div class="text-center text-xs text-slate-500 py-8">No chats yet</div>';
+          chatList.innerHTML = `
+            <div class="text-center text-xs text-slate-500 py-4 sm:py-8">
+              <i class="fa-solid fa-inbox text-2xl sm:text-3xl block mb-2 text-slate-700"></i>
+              No chats yet
+            </div>`;
+          document.getElementById('chat-count').textContent = '0';
           return;
         }
 
@@ -998,37 +1057,41 @@
           chats.push({ id: doc.id, ...data, otherId, otherName });
         });
 
-        // Sort by last updated
         chats.sort((a, b) => b.lastUpdated?.toDate?.() - a.lastUpdated?.toDate?.());
+
+        document.getElementById('chat-count').textContent = chats.length;
 
         chats.forEach(chat => {
           const isActive = chat.id === currentChatId;
+          const isOwnerChat = chat.isOwnerChat || false;
+          
           chatList.innerHTML += `
-            <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-3 flex items-center gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
-              <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-10 h-10 rounded-full border-2 border-slate-700 object-cover">
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-white truncate">${chat.otherName}</p>
-                <p class="text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+            <div class="chat-list-item ${isActive ? 'active' : ''} rounded-xl p-2 sm:p-3 flex items-center gap-2 sm:gap-3" onclick="openChatById('${chat.id}', '${chat.otherId}', '${chat.otherName}')">
+              <div class="relative flex-shrink-0">
+                <img src="https://ui-avatars.com/api/?name=${chat.otherName}" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 ${isOwnerChat ? 'border-amber-500' : 'border-slate-700'} object-cover">
+                ${isOwnerChat ? `<span class="absolute -top-1 -right-1 text-[8px] bg-amber-600 text-white rounded-full px-1">👑</span>` : ''}
               </div>
-              <span class="text-[10px] text-slate-500">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString() : ''}</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs sm:text-sm font-bold text-white truncate">${chat.otherName}</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 truncate">${chat.lastMessage || 'No messages yet'}</p>
+              </div>
+              <span class="text-[8px] sm:text-[10px] text-slate-500 flex-shrink-0">${chat.lastUpdated ? new Date(chat.lastUpdated.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
             </div>
           `;
         });
       });
     }
 
-    // Open chat by ID
     window.openChatById = (chatId, otherId, otherName) => {
       currentChatId = chatId;
       currentChatUser = { id: otherId, name: otherName };
       document.getElementById('chat-view').classList.remove('hidden');
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('chat-title').textContent = `💬 Chat with ${otherName}`;
+      document.getElementById('chat-title').textContent = `💬 ${otherName}`;
       loadChatMessages(chatId);
       loadChatList();
     };
 
-    // Close Chat
     window.closeChat = () => {
       document.getElementById('chat-view').classList.add('hidden');
       currentChatId = null;
@@ -1036,7 +1099,6 @@
       switchPage('home');
     };
 
-    // Load Chat Messages
     function loadChatMessages(chatId) {
       const messagesRef = collection(db, 'chats', chatId, 'messages');
       const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -1044,7 +1106,7 @@
       onSnapshot(q, (snapshot) => {
         messagesBox.innerHTML = '';
         if (snapshot.empty) {
-          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p><p class="text-xs">Start the conversation!</p></div>`;
+          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-6 sm:py-10"><i class="fa-solid fa-comment-dots text-3xl sm:text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p></div>`;
           return;
         }
 
@@ -1055,21 +1117,21 @@
 
           messagesBox.innerHTML += `
             <div class="message-in flex flex-col ${isMe ? 'items-end' : 'items-start'} group">
-              <div class="flex items-center gap-2 mb-0.5">
-                ${!isMe ? `<img src="${msg.senderPhoto || 'https://ui-avatars.com/api/?name=' + senderName}" class="w-5 h-5 rounded-full border border-slate-700">` : ''}
-                <span class="text-[9px] font-semibold ${isMe ? 'text-indigo-400' : 'text-slate-400'}">${isMe ? 'You' : senderName}</span>
-                ${isMe ? `<img src="${currentUser?.photoURL || 'https://ui-avatars.com/api/?name=You'}" class="w-5 h-5 rounded-full border border-indigo-500">` : ''}
+              <div class="flex items-center gap-1 sm:gap-2 mb-0.5">
+                ${!isMe ? `<img src="${msg.senderPhoto || 'https://ui-avatars.com/api/?name=' + senderName}" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-slate-700">` : ''}
+                <span class="text-[8px] sm:text-[9px] font-semibold ${isMe ? 'text-indigo-400' : 'text-slate-400'}">${isMe ? 'You' : senderName}</span>
+                ${isMe ? `<img src="${currentUser?.photoURL || 'https://ui-avatars.com/api/?name=You'}" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-indigo-500">` : ''}
               </div>
-              <div class="relative">
-                <div class="px-4 py-2.5 rounded-2xl text-sm max-w-[80%] break-words ${isMe ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-br-none shadow-lg shadow-indigo-600/20' : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'}">
-                  ${msg.replyTo ? `<div class="text-[10px] bg-slate-700/30 p-2 rounded-lg mb-1 border-l-2 border-indigo-400 text-slate-300"><i class="fa-solid fa-reply mr-1"></i> ${msg.replyTo}</div>` : ''}
-                  <div class="message-text">${msg.text}</div>
+              <div class="relative max-w-[90%] sm:max-w-[80%]">
+                <div class="px-3 sm:px-4 py-2 rounded-2xl text-sm break-words ${isMe ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-br-none shadow-lg shadow-indigo-600/20' : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'}">
+                  ${msg.replyTo ? `<div class="text-[10px] bg-slate-700/30 p-1.5 sm:p-2 rounded-lg mb-1 border-l-2 border-indigo-400 text-slate-300"><i class="fa-solid fa-reply mr-1"></i> ${msg.replyTo}</div>` : ''}
+                  <div class="message-text text-sm">${msg.text}</div>
                 </div>
-                <button onclick="setReply('${doc.id}', '${msg.text.replace(/'/g, "\\'")}')" class="absolute -top-2 ${isMe ? '-left-8' : '-right-8'} opacity-0 group-hover:opacity-100 transition bg-slate-800 hover:bg-indigo-600 text-slate-400 hover:text-white p-1 rounded-full text-[10px] border border-slate-700 hover:border-indigo-500">
+                <button onclick="setReply('${doc.id}', '${msg.text.replace(/'/g, "\\'")}')" class="absolute -top-2 ${isMe ? '-left-6 sm:-left-8' : '-right-6 sm:-right-8'} opacity-0 group-hover:opacity-100 transition bg-slate-800 hover:bg-indigo-600 text-slate-400 hover:text-white p-1 rounded-full text-[10px] border border-slate-700 hover:border-indigo-500 touch-target">
                   <i class="fa-solid fa-reply"></i>
                 </button>
               </div>
-              <span class="text-[8px] text-slate-500 mt-0.5">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : ''}</span>
+              <span class="text-[8px] text-slate-500 mt-0.5">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString().slice(0,5) : ''}</span>
             </div>
           `;
         });
@@ -1077,7 +1139,6 @@
       });
     }
 
-    // Reply System
     window.setReply = (msgId, text) => {
       replyToMessage = { id: msgId, text: text };
       document.getElementById('reply-preview').classList.remove('hidden');
@@ -1090,7 +1151,6 @@
       document.getElementById('reply-preview').classList.add('hidden');
     });
 
-    // Send Message
     chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = msgInput.value.trim();
@@ -1110,7 +1170,6 @@
         }
         await addDoc(collection(db, 'chats', currentChatId, 'messages'), msgData);
         
-        // Update last message in chat document
         await updateDoc(doc(db, 'chats', currentChatId), {
           lastMessage: text,
           lastUpdated: new Date()
@@ -1133,7 +1192,6 @@
       }
     });
 
-    // Delete Chat
     document.getElementById('chat-delete-btn').addEventListener('click', async () => {
       if (!currentUser || !currentChatId) return;
       if (!confirm('Delete all messages in this chat?')) return;
@@ -1151,16 +1209,16 @@
           lastUpdated: new Date()
         });
 
-        alert('✅ Chat deleted successfully!');
+        alert('✅ Chat deleted!');
         loadChatList();
-        messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><p>Chat deleted</p></div>`;
+        messagesBox.innerHTML = `<div class="text-center text-slate-500 py-6 sm:py-10"><p>Chat deleted</p></div>`;
       } catch (error) {
         alert('Error deleting chat: ' + error.message);
       }
     });
 
-    console.log('✅ Rentify LK v6.0 - WhatsApp Style Chat System Loaded!');
-    console.log('🔥 Features: Chat List, Private Chats, Reply System, Filter Fixed');
+    console.log('✅ Rentify LK v7.0 - Mobile Friendly!');
+    console.log('📱 Features: Responsive, Touch-friendly, WhatsApp-style Chat');
   </script>
 </body>
-  </html>
+</html>
