@@ -1,18 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rentify LK - Premium P2P Equipment Rental</title>
+  
+  <!-- SEO -->
+  <meta name="description" content="Rent high-end equipment in Sri Lanka. P2P rental platform for electronics and non-electronics.">
+  <meta name="keywords" content="rent equipment sri lanka, p2p rental, camera rental, tool rental, electronics">
+  
+  <!-- Fonts & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * { scroll-behavior: smooth; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+    
+    .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
+    .hover-glow:hover { box-shadow: 0 0 30px rgba(79, 70, 229, 0.15); }
+    .message-in { animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Sidebar */
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar.open { transform: translateX(0); }
+    .overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+    .overlay.active { opacity: 1; pointer-events: all; }
+    
+    /* Chat Tabs */
+    .chat-tab { padding: 8px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; transition: all 0.3s; cursor: pointer; }
+    .chat-tab.active { background: #4f46e5; color: white; }
+    .chat-tab:not(.active) { color: #94a3b8; background: transparent; }
+    .chat-tab:not(.active):hover { color: white; background: #1e293b; }
+    
+    /* Message styling */
+    .message-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+
+  <!-- Background Glows -->
+  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <!-- LANDING VIEW -->
+  <div id="landing-view" class="flex-1 flex flex-col items-center justify-center px-4 py-12 relative z-10 min-h-screen">
+    <div class="max-w-4xl mx-auto text-center space-y-8">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+        <i class="fa-solid fa-bolt text-amber-400"></i> Sri Lanka's Premier P2P Sharing Network
+      </div>
+      <h1 class="text-5xl sm:text-7xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-[1.1]">
+        Rent Equipment <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Anytime, Anywhere.</span>
+      </h1>
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto font-medium">
+        Discover electronics, tools, and professional gear from trusted owners near you. Secure & authenticated with Google.
+      </p>
+      <div class="pt-4">
+        <div class="glass-card p-8 rounded-3xl max-w-md mx-auto shadow-2xl space-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">⚡</div>
+          <div><h3 class="text-xl font-bold text-white">Welcome to Rentify LK</h3><p class="text-xs text-slate-400 mt-1">Sign in with Google to access the platform</p></div>
+          <button id="google-login-btn" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold py-3.5 px-6 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center gap-3 text-sm active:scale-95">
+            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            Continue with Google
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP VIEW -->
+  <div id="main-app-view" class="hidden flex-1 flex-col">
+    
+    <!-- TOP NAVBAR -->
+    <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <!-- Hamburger Menu -->
+          <button id="menu-btn" class="text-slate-400 hover:text-white text-xl sm:text-2xl transition">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          
+          <div class="flex items-center gap-2 cursor-pointer" onclick="switchPage('home')">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg shadow-indigo-500/30">⚡</div>
+            <div><span class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Rentify</span><span class="text-xs font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 ml-1">LK</span></div>
+          </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3 bg-slate-900/90 p-1.5 pr-4 rounded-full border border-slate-800">
+            <img id="user-img" src="" class="w-8 h-8 rounded-full border-2 border-indigo-500 object-cover">
+            <span id="user-name" class="font-semibold text-sm text-slate-200 hidden lg:inline"></span>
+          </div>
+          <button id="logout-btn" class="text-slate-400 hover:text-white text-sm font-bold bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl transition"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- SIDEBAR MENU -->
+    <div class="overlay fixed inset-0 z-50" id="sidebar-overlay"></div>
+    <div class="sidebar fixed top-0 left-0 h-full w-72 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto shadow-2xl" id="sidebar">
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-sm">⚡</div>
+          <span class="text-lg font-extrabold text-white">Rentify <span class="text-indigo-400">LK</span></span>
+        </div>
+        <button id="sidebar-close-btn" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-times"></i></button>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <button class="sidebar-nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600/20 text-indigo-400" data-page="home">
+          <i class="fa-solid fa-home w-5"></i> <span>Home</span>
+        </button>
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="myitems">
+          <i class="fa-solid fa-box w-5"></i> <span>My Items</span>
+        </button>
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="account">
+          <i class="fa-solid fa-user w-5"></i> <span>Account</span>
+        </button>
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="about">
+          <i class="fa-solid fa-info-circle w-5"></i> <span>About</span>
+        </button>
+        <button class="sidebar-nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 transition" data-page="dashboard">
+          <i class="fa-solid fa-gem w-5"></i> <span>Dashboard</span>
+        </button>
+      </div>
+
+      <div class="border-t border-slate-800 mt-8 pt-6">
+        <div class="flex items-center gap-3 px-4">
+          <img id="sidebar-user-img" src="" class="w-10 h-10 rounded-full border-2 border-indigo-500 object-cover">
+          <div>
+            <p id="sidebar-user-name" class="text-sm font-bold text-white">User</p>
+            <p class="text-xs text-slate-400" id="sidebar-user-email">email@example.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full z-10">
+      
+      <!-- ===== PAGE: HOME ===== -->
+      <div id="page-home" class="page-content space-y-6">
+        <div class="text-center max-w-3xl mx-auto py-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Explore Inventory</span>
+          <h1 class="text-3xl sm:text-5xl font-black mt-3 mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent leading-tight">Find Your Perfect Equipment</h1>
+          <p class="text-slate-400 text-sm sm:text-base">Browse items listed by verified owners across all 25 districts of Sri Lanka.</p>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="glass-card rounded-2xl p-4 sm:p-5 shadow-2xl">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="flex-1 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input type="text" id="search-input" placeholder="Search equipment..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200">
+            </div>
+            <button id="filter-toggle-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition whitespace-nowrap">
+              <i class="fa-solid fa-sliders-h"></i> Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Sidebar -->
+        <div class="overlay fixed inset-0 z-50" id="filter-overlay"></div>
+        <div class="filter-sidebar fixed top-0 left-0 h-full w-80 sm:w-96 bg-slate-900 border-r border-slate-800 z-50 p-6 overflow-y-auto" id="filter-sidebar">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold"><i class="fa-solid fa-sliders-h text-indigo-400 mr-2"></i>Filters</h2>
+            <button id="filter-close-btn" class="text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-times"></i></button>
+          </div>
+          
+          <div class="space-y-5">
+            <div>
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-400">District</label>
+              <select id="filter-district" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
+                <option value="All">All Districts</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Category</label>
+              <select id="filter-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
+                <option value="All">All Categories</option>
+                <option value="Electronics">📱 Electronics</option>
+                <option value="Non-Electronics">🔧 Non-Electronics</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Sub-Category</label>
+              <select id="filter-subcategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 mt-1">
+                <option value="All">All Sub-Categories</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Max Price (LKR)</label>
+              <input type="range" id="filter-price" min="0" max="50000" step="500" value="50000" class="w-full mt-2 accent-indigo-500">
+              <div class="flex justify-between text-xs text-slate-400 mt-1"><span>LKR 0</span><span id="filter-price-label">LKR 50,000</span></div>
+            </div>
+            <button id="filter-apply-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3 rounded-xl font-bold text-sm transition">Apply Filters</button>
+            <button id="filter-reset-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl font-bold text-sm transition">Reset All</button>
+          </div>
+        </div>
+
+        <!-- Items Grid -->
+        <div id="items-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
+          <div class="bg-slate-900/40 rounded-2xl p-4 border border-slate-800 animate-pulse h-80"></div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: MY ITEMS ===== -->
+      <div id="page-myitems" class="page-content hidden max-w-4xl mx-auto space-y-8">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div><h1 class="text-2xl font-black text-white"><i class="fa-solid fa-box text-indigo-400"></i> My Items</h1><p class="text-xs text-slate-400">Manage your equipment listings</p></div>
+        </div>
+
+        <!-- Add Item Form -->
+        <div class="glass-card rounded-2xl p-6">
+          <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-plus-circle text-indigo-400"></i> List New Equipment</h2>
+          <form id="add-item-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input type="text" id="title" placeholder="Equipment Name" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+              <input type="number" id="price" placeholder="Price per Day (LKR)" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200" required>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <select id="location" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300"></select>
+              <select id="category" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
+                <option value="Electronics">📱 Electronics</option>
+                <option value="Non-Electronics">🔧 Non-Electronics</option>
+              </select>
+              <select id="subcategory" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-300">
+                <option value="">Select Sub-Category</option>
+              </select>
+            </div>
+            <div>
+              <input type="text" id="whatsapp" placeholder="WhatsApp Number (e.g. 94771234567)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+              <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+' (e.g. 94771234567)</p>
+            </div>
+            <textarea id="description" placeholder="Description & terms..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 h-24 text-slate-200"></textarea>
+            
+            <div class="upload-zone bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl p-6 text-center transition cursor-pointer" id="upload-zone">
+              <input type="file" id="image-upload" accept="image/*" class="hidden">
+              <i class="fa-solid fa-cloud-upload-alt text-4xl text-slate-600"></i>
+              <p class="text-sm text-slate-400 mt-2 font-medium">Click to upload equipment image</p>
+              <p class="text-xs text-slate-500">PNG, JPG, WEBP (Max 32MB)</p>
+              <div id="upload-preview" class="mt-3 hidden">
+                <img id="preview-img" class="max-h-48 mx-auto rounded-lg border border-slate-700 shadow-lg">
+                <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check-circle"></i> Image uploaded!</p>
+              </div>
+            </div>
+
+            <button type="submit" id="publish-btn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-600/30 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
+              🚀 Publish Equipment
+            </button>
+          </form>
+        </div>
+
+        <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-list text-indigo-400"></i> Your Active Listings</h2>
+        <div id="my-items-list" class="space-y-4"></div>
+      </div>
+
+      <!-- ===== PAGE: ACCOUNT ===== -->
+      <div id="page-account" class="page-content hidden max-w-3xl mx-auto space-y-8">
+        <div class="pb-4 border-b border-slate-800">
+          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-user text-indigo-400"></i> My Account</h1>
+          <p class="text-xs text-slate-400">Manage your profile and settings</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-6">
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <div class="relative">
+              <img id="profile-photo" src="" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-indigo-500 object-cover bg-slate-800">
+              <button id="profile-photo-btn" class="absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded-full text-xs transition shadow-lg shadow-indigo-600/30">
+                <i class="fa-solid fa-camera"></i>
+              </button>
+              <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
+            </div>
+            <div class="text-center sm:text-left">
+              <h2 id="profile-display-name" class="text-xl font-bold text-white">User</h2>
+              <p class="text-sm text-slate-400" id="profile-email">email@example.com</p>
+              <p class="text-xs text-slate-500 mt-1">Joined: <span id="profile-joined">Today</span></p>
+            </div>
+          </div>
+
+          <div class="border-t border-slate-800 pt-6">
+            <h3 class="font-bold text-sm text-slate-300 mb-4"><i class="fa-solid fa-pen text-indigo-400 mr-2"></i> Edit Profile</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="text-xs text-slate-400">Display Name</label>
+                <input type="text" id="edit-display-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">WhatsApp Number</label>
+                <input type="text" id="edit-whatsapp" placeholder="94771234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200">
+                <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-info-circle"></i> Include country code without '+'</p>
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Bio</label>
+                <textarea id="edit-bio" rows="3" placeholder="Tell us about yourself..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-200"></textarea>
+              </div>
+              <button id="save-profile-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition">Save Profile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: ABOUT ===== -->
+      <div id="page-about" class="page-content hidden max-w-3xl mx-auto space-y-8">
+        <div class="pb-4 border-b border-slate-800">
+          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-info-circle text-indigo-400"></i> About Us</h1>
+          <p class="text-xs text-slate-400">Learn more about Rentify LK</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-6">
+          <div class="text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-indigo-600/30">⚡</div>
+            <h2 class="text-2xl font-bold text-white mt-3">Rentify LK</h2>
+            <p class="text-sm text-slate-400">Sri Lanka's Premier P2P Equipment Rental Platform</p>
+          </div>
+
+          <div class="border-t border-slate-800 pt-4 space-y-3 text-sm text-slate-300 leading-relaxed">
+            <p><strong class="text-white">Rentify LK</strong> is a peer-to-peer rental platform that connects equipment owners with people who need to rent high-quality tools, electronics, and gear across Sri Lanka.</p>
+            <p>Our mission is to make equipment rental <strong class="text-white">accessible, affordable, and trustworthy</strong> for everyone.</p>
+          </div>
+
+          <div class="border-t border-slate-800 pt-4">
+            <h3 class="font-bold text-white text-sm mb-3"><i class="fa-solid fa-envelope text-indigo-400 mr-2"></i> Contact Us</h3>
+            <div class="space-y-2 text-sm text-slate-300">
+              <p><i class="fa-solid fa-envelope w-6 text-slate-500"></i> rentifylk@gmail.com</p>
+              <p><i class="fa-solid fa-phone w-6 text-slate-500"></i> +94 77 123 4567</p>
+              <p><i class="fa-solid fa-map-marker-alt w-6 text-slate-500"></i> Colombo, Sri Lanka</p>
+            </div>
+          </div>
+
+          <div class="text-center text-[10px] text-slate-500 pt-2 border-t border-slate-800">
+            © 2026 Rentify LK. All rights reserved. Made with ❤️ in Sri Lanka.
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: DASHBOARD ===== -->
+      <div id="page-dashboard" class="page-content hidden max-w-4xl mx-auto space-y-8">
+        <div class="pb-4 border-b border-slate-800">
+          <h1 class="text-2xl font-black text-white"><i class="fa-solid fa-gem text-amber-400"></i> Dashboard</h1>
+          <p class="text-xs text-slate-400">Overview of your activity</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="glass-card rounded-2xl p-6 text-center">
+            <p class="text-3xl font-black text-indigo-400" id="dash-items">0</p>
+            <p class="text-xs text-slate-400">Total Items</p>
+          </div>
+          <div class="glass-card rounded-2xl p-6 text-center">
+            <p class="text-3xl font-black text-emerald-400" id="dash-available">0</p>
+            <p class="text-xs text-slate-400">Available</p>
+          </div>
+          <div class="glass-card rounded-2xl p-6 text-center">
+            <p class="text-3xl font-black text-amber-400" id="dash-rented">0</p>
+            <p class="text-xs text-slate-400">Currently Rented</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="font-bold text-sm text-slate-300 mb-4"><i class="fa-solid fa-clock text-indigo-400 mr-2"></i> Recent Activity</h3>
+          <div id="dash-activity" class="space-y-2 text-sm text-slate-400">
+            <p class="text-center text-xs py-4">No recent activity</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CHAT VIEW ===== -->
+      <div id="chat-view" class="hidden max-w-3xl mx-auto glass-card rounded-2xl overflow-hidden flex flex-col h-[75vh] sm:h-[80vh] shadow-2xl">
+        <div class="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button onclick="closeChat()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-arrow-left text-lg"></i></button>
+            <div>
+              <h2 id="chat-title" class="font-bold text-sm text-white">💬 Chat</h2>
+              <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Online</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="chat-delete-btn" class="text-rose-400 hover:text-rose-300 text-xs bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded-lg border border-rose-500/30 transition">
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Tabs -->
+        <div class="flex gap-2 px-4 py-2 bg-slate-900/50 border-b border-slate-800 overflow-x-auto">
+          <button class="chat-tab active" data-chat="everyone">💬 Everyone</button>
+          <button class="chat-tab" data-chat="owner">👤 Owner</button>
+          <button class="chat-tab" data-chat="private">🔒 Private</button>
+        </div>
+        
+        <div id="messages-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60">
+          <div class="text-center text-xs text-slate-500 py-4">✨ No messages yet. Start the conversation!</div>
+        </div>
+        
+        <!-- Reply Preview -->
+        <div id="reply-preview" class="hidden bg-slate-800/80 px-4 py-2 border-t border-slate-700 flex items-center justify-between">
+          <div class="flex-1">
+            <span class="text-xs text-indigo-400 font-bold">Replying to:</span>
+            <p id="reply-preview-text" class="text-xs text-slate-300 truncate"></p>
+          </div>
+          <button id="reply-cancel-btn" class="text-slate-400 hover:text-white text-sm px-2"><i class="fa-solid fa-times"></i></button>
+        </div>
+        
+        <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+          <input type="text" id="msg-input" placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 transition" required>
+          <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition transform hover:scale-105">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== FIREBASE ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, where, deleteDoc, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const IMG_BB_API_KEY = "a466c482d80add89bfd3f941bac3c6fa";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9UV8Td4R4ZFBZVrRzsIVaQ7j5Qd0-Fs8",
+      authDomain: "rentify-lk.firebaseapp.com",
+      databaseURL: "https://rentify-lk-default-rtdb.firebaseio.com",
+      projectId: "rentify-lk",
+      storageBucket: "rentify-lk.firebasestorage.app",
+      messagingSenderId: "737637151231",
+      appId: "1:737637151231:web:75286f9a9075f4511a77ca",
+      measurementId: "G-GE52CR2RH6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let allItems = [];
+    let selectedFile = null;
+    let profileFile = null;
+    let replyToMessage = null;
+    let activeChatType = 'everyone'; // 'everyone', 'owner', 'private'
+
+    const DISTRICTS = [
+      'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
+      'Galle', 'Matara', 'Hambantota', 'Jaffna', 'Kilinochchi', 'Mullaitivu',
+      'Mannar', 'Vavuniya', 'Puttalam', 'Kurunegala', 'Anuradhapura', 'Polonnaruwa',
+      'Trincomalee', 'Batticaloa', 'Ampara', 'Badulla', 'Monaragala', 'Ratnapura', 'Kegalle'
     ];
 
-    // ============================================================
-    // 📂 CATEGORIES & SUB-CATEGORIES
-    // ============================================================
     const CATEGORIES = {
       'Electronics': ['Smartphones', 'Laptops & Computers', 'Cameras & Photography', 'Audio & Speakers', 'Gaming Consoles', 'TVs & Monitors', 'Drones'],
       'Non-Electronics': ['Power Tools', 'Gardening Tools', 'Sports Equipment', 'Furniture', 'Vehicles', 'Camping Gear', 'Musical Instruments']
     };
 
-    // ============================================================
-    // DOM Elements
-    // ============================================================
-    const landingView =     function populateCategoryDropdowns() {
-      // Filter subcategory
+    // DOM
+    const landingView = document.getElementById('landing-view');
+    const mainAppView = document.getElementById('main-app-view');
+    const userImg = document.getElementById('user-img');
+    const userName = document.getElementById('user-name');
+    const itemsContainer = document.getElementById('items-container');
+    const messagesBox = document.getElementById('messages-box');
+    const chatForm = document.getElementById('chat-form');
+    const msgInput = document.getElementById('msg-input');
+    const filterSidebar = document.getElementById('filter-sidebar');
+    const filterOverlay = document.getElementById('filter-overlay');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    // ========== AUTH ==========
+    document.getElementById('google-login-btn').addEventListener('click', () => {
+      signInWithPopup(auth, provider).catch(err => alert('Login Error: ' + err.message));
+    });
+
+    document.querySelectorAll('#logout-btn').forEach(btn => {
+      btn.addEventListener('click', () => signOut(auth).then(() => location.reload()));
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        landingView.classList.add('hidden');
+        mainAppView.classList.remove('hidden');
+        userImg.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + user.displayName;
+        userName.innerText = user.displayName || 'User';
+        document.getElementById('profile-photo').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + user.displayName;
+        document.getElementById('profile-display-name').textContent = user.displayName || 'User';
+        document.getElementById('profile-email').textContent = user.email || '';
+        document.getElementById('sidebar-user-img').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + user.displayName;
+        document.getElementById('sidebar-user-name').textContent = user.displayName || 'User';
+        document.getElementById('sidebar-user-email').textContent = user.email || '';
+
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (data.displayName) document.getElementById('profile-display-name').textContent = data.displayName;
+          if (data.bio) document.getElementById('edit-bio').value = data.bio;
+          if (data.whatsapp) document.getElementById('edit-whatsapp').value = data.whatsapp;
+          if (data.photoURL) {
+            document.getElementById('profile-photo').src = data.photoURL;
+            userImg.src = data.photoURL;
+            document.getElementById('sidebar-user-img').src = data.photoURL;
+          }
+          document.getElementById('edit-display-name').value = data.displayName || user.displayName;
+        } else {
+          document.getElementById('edit-display-name').value = user.displayName || '';
+        }
+
+        loadItems();
+        loadMyItems(user.uid);
+        loadChatMessages();
+        populateDistricts();
+        populateCategoryDropdowns();
+        updateDashboard();
+      } else {
+        landingView.classList.remove('hidden');
+        mainAppView.classList.add('hidden');
+      }
+    });
+
+    // ========== SIDEBAR ==========
+    document.getElementById('menu-btn').addEventListener('click', () => {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('active');
+    });
+
+    document.getElementById('sidebar-close-btn').addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    document.querySelectorAll('.sidebar-nav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const page = el.dataset.page;
+        document.querySelectorAll('.sidebar-nav-item').forEach(e => {
+          e.classList.remove('active', 'bg-indigo-600/20', 'text-indigo-400');
+          e.classList.add('text-slate-400');
+        });
+        el.classList.add('active', 'bg-indigo-600/20', 'text-indigo-400');
+        el.classList.remove('text-slate-400');
+        closeChat();
+        switchPage(page);
+        closeSidebar();
+      });
+    });
+
+    // ========== POPULATE ==========
+    function populateDistricts() {
+      const selects = ['location', 'filter-district'];
+      selects.forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+          sel.innerHTML = '<option value="All">All Districts</option>';
+          DISTRICTS.forEach(d => {
+            sel.innerHTML += `<option value="${d}">${d}</option>`;
+          });
+        }
+      });
+    }
+
+    function populateCategoryDropdowns() {
       const filterCat = document.getElementById('filter-category');
       const filterSub = document.getElementById('filter-subcategory');
       filterCat.addEventListener('change', () => {
@@ -25,7 +596,6 @@
         }
       });
 
-      // Add item subcategory
       const addCat = document.getElementById('category');
       const addSub = document.getElementById('subcategory');
       addCat.addEventListener('change', () => {
@@ -37,93 +607,54 @@
           });
         }
       });
-      // Trigger initial
       addCat.dispatchEvent(new Event('change'));
     }
 
-    // ============================================================
-    // PAGE SWITCHER
-    // ============================================================
+    // ========== PAGE SWITCHER ==========
     function switchPage(page) {
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
       const target = document.getElementById('page-' + page);
       if (target) target.classList.remove('hidden');
-
-      // Update nav tabs
-      document.querySelectorAll('.nav-tab').forEach(el => {
-        el.classList.remove('active', 'text-white', 'bg-indigo-600/30');
-        el.classList.add('text-slate-400');
-        if (el.dataset.page === page) {
-          el.classList.add('active', 'text-white', 'bg-indigo-600/30');
-          el.classList.remove('text-slate-400');
-        }
-      });
-      document.querySelectorAll('.nav-tab-mobile').forEach(el => {
-        el.classList.remove('text-indigo-400');
-        el.classList.add('text-slate-400');
-        if (el.dataset.page === page) {
-          el.classList.add('text-indigo-400');
-          el.classList.remove('text-slate-400');
-        }
-      });
     }
-
     window.switchPage = switchPage;
 
-    document.querySelectorAll('.nav-tab, .nav-tab-mobile').forEach(el => {
-      el.addEventListener('click', () => {
-        const page = el.dataset.page;
-        if (page === 'home') closeChat();
-        switchPage(page);
-        // Close mobile nav
-        document.getElementById('mobile-nav').classList.add('hidden');
-      });
-    });
-
-    // Mobile menu toggle
-    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-      const nav = document.getElementById('mobile-nav');
-      nav.classList.toggle('hidden');
-    });
-
-    // ============================================================
-    // FILTER SIDEBAR
-    // ============================================================
-    document.getElementById('filter-toggle-btn')?.addEventListener('click', () => {
+    // ========== FILTER ==========
+    document.getElementById('filter-toggle-btn').addEventListener('click', () => {
       filterSidebar.classList.add('open');
       filterOverlay.classList.add('active');
     });
 
-    document.getElementById('filter-close-btn')?.addEventListener('click', closeFilter);
-    filterOverlay?.addEventListener('click', closeFilter);
-
-    function closeFilter() {
+    document.getElementById('filter-close-btn').addEventListener('click', () => {
       filterSidebar.classList.remove('open');
       filterOverlay.classList.remove('active');
-    }
+    });
 
-    document.getElementById('filter-price')?.addEventListener('input', (e) => {
+    filterOverlay.addEventListener('click', () => {
+      filterSidebar.classList.remove('open');
+      filterOverlay.classList.remove('active');
+    });
+
+    document.getElementById('filter-price').addEventListener('input', (e) => {
       document.getElementById('filter-price-label').textContent = 'LKR ' + parseInt(e.target.value).toLocaleString();
     });
 
-    document.getElementById('filter-apply-btn')?.addEventListener('click', () => {
+    document.getElementById('filter-apply-btn').addEventListener('click', () => {
       applyFilters();
-      closeFilter();
+      filterSidebar.classList.remove('open');
+      filterOverlay.classList.remove('active');
     });
 
-    document.getElementById('filter-reset-btn')?.addEventListener('click', () => {
+    document.getElementById('filter-reset-btn').addEventListener('click', () => {
       document.getElementById('filter-district').value = 'All';
       document.getElementById('filter-category').value = 'All';
       document.getElementById('filter-subcategory').innerHTML = '<option value="All">All Sub-Categories</option>';
       document.getElementById('filter-price').value = '50000';
       document.getElementById('filter-price-label').textContent = 'LKR 50,000';
       applyFilters();
-      closeFilter();
+      filterSidebar.classList.remove('open');
+      filterOverlay.classList.remove('active');
     });
 
-    // ============================================================
-    // APPLY FILTERS
-    // ============================================================
     function applyFilters() {
       const district = document.getElementById('filter-district').value;
       const category = document.getElementById('filter-category').value;
@@ -140,25 +671,27 @@
       renderItems(filtered);
     }
 
-    // ============================================================
-    // LOAD ITEMS
-    // ============================================================
+    // ========== ITEMS ==========
     function loadItems() {
       onSnapshot(collection(db, 'items'), (snapshot) => {
         allItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderItems(allItems);
+        updateDashboard();
       });
     }
 
     function renderItems(items) {
       itemsContainer.innerHTML = '';
       if (items.length === 0) {
-        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><i class="fa-solid fa-box-open text-4xl mb-3 block"></i><p>No equipment found matching criteria.</p></div>`;
+        itemsContainer.innerHTML = `<div class="col-span-full text-center py-16 text-slate-500"><i class="fa-solid fa-box-open text-4xl mb-3 block"></i><p>No equipment found.</p></div>`;
         return;
       }
 
       items.forEach(item => {
         const isAvailable = item.status === 'Available';
+        const whatsapp = item.whatsapp || '';
+        const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}?text=Hi%20I%27m%20interested%20in%20renting%20${encodeURIComponent(item.title)}` : '';
+
         itemsContainer.innerHTML += `
           <div class="item-card bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition flex flex-col shadow-xl hover-glow">
             <div class="relative h-48 bg-slate-950 overflow-hidden">
@@ -173,11 +706,14 @@
                 <h3 class="text-base font-bold text-white mb-1">${item.title}</h3>
                 <p class="text-slate-400 text-xs line-clamp-2 mb-3">${item.description || 'No description'}</p>
               </div>
-              <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+              <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                 <div><span class="text-[10px] text-slate-500 block">Per Day</span><span class="text-lg font-extrabold text-white">LKR ${item.price}</span></div>
-                <button onclick="openChat('${item.id}', '${item.title}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
-                  ${isAvailable ? '💬 Contact Owner' : 'Unavailable'}
-                </button>
+                <div class="flex gap-2">
+                  ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 transform hover:scale-105"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : ''}
+                  <button onclick="openChat('${item.id}', '${item.title}', '${item.ownerId || ''}')" class="px-4 py-2 text-xs font-bold rounded-xl transition ${isAvailable ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transform hover:scale-105' : 'bg-slate-800 text-slate-500 pointer-events-none'}">
+                    ${isAvailable ? '💬 Chat' : 'Unavailable'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -185,10 +721,8 @@
       });
     }
 
-    // ============================================================
-    // SEARCH
-    // ============================================================
-    document.getElementById('search-input')?.addEventListener('input', (e) => {
+    // ========== SEARCH ==========
+    document.getElementById('search-input').addEventListener('input', (e) => {
       const search = e.target.value.toLowerCase();
       const filtered = allItems.filter(item => {
         return item.title.toLowerCase().includes(search) ||
@@ -198,14 +732,11 @@
       renderItems(filtered);
     });
 
-    // ============================================================
-    // IMAGE UPLOAD (IMG BB)
-    // ============================================================
+    // ========== IMAGE UPLOAD ==========
     async function uploadToImgBB(file) {
       const formData = new FormData();
       formData.append('key', IMG_BB_API_KEY);
       formData.append('image', file);
-
       try {
         const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
         const data = await response.json();
@@ -217,14 +748,13 @@
       }
     }
 
-    // Equipment Image Upload
     const uploadZone = document.getElementById('upload-zone');
     const fileInput = document.getElementById('image-upload');
     const previewImg = document.getElementById('preview-img');
     const uploadPreview = document.getElementById('upload-preview');
 
-    uploadZone?.addEventListener('click', () => fileInput.click());
-    fileInput?.addEventListener('change', (e) => {
+    uploadZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
         if (file.size > 32 * 1024 * 1024) { alert('Image must be less than 32MB'); return; }
@@ -235,36 +765,38 @@
       }
     });
 
-    // Profile Photo Upload
+    // ========== PROFILE PHOTO ==========
     const profilePhotoBtn = document.getElementById('profile-photo-btn');
     const profilePhotoInput = document.getElementById('profile-photo-input');
-    profilePhotoBtn?.addEventListener('click', () => profilePhotoInput.click());
-    profilePhotoInput?.addEventListener('change', async (e) => {
+    profilePhotoBtn.addEventListener('click', () => profilePhotoInput.click());
+    profilePhotoInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file || !currentUser) return;
       if (file.size > 32 * 1024 * 1024) { alert('Image must be less than 32MB'); return; }
-
       try {
         const url = await uploadToImgBB(file);
         await setDoc(doc(db, 'users', currentUser.uid), { photoURL: url }, { merge: true });
         document.getElementById('profile-photo').src = url;
         userImg.src = url;
+        document.getElementById('sidebar-user-img').src = url;
         alert('Profile photo updated!');
       } catch (error) {
         alert('Failed to upload profile photo: ' + error.message);
       }
     });
 
-    // Save Profile
-    document.getElementById('save-profile-btn')?.addEventListener('click', async () => {
+    // ========== SAVE PROFILE ==========
+    document.getElementById('save-profile-btn').addEventListener('click', async () => {
       if (!currentUser) return;
       const displayName = document.getElementById('edit-display-name').value;
       const bio = document.getElementById('edit-bio').value;
+      const whatsapp = document.getElementById('edit-whatsapp').value;
 
       try {
         await setDoc(doc(db, 'users', currentUser.uid), {
           displayName: displayName,
           bio: bio,
+          whatsapp: whatsapp,
           updatedAt: new Date()
         }, { merge: true });
         document.getElementById('profile-display-name').textContent = displayName || currentUser.displayName;
@@ -274,10 +806,8 @@
       }
     });
 
-    // ============================================================
-    // ADD ITEM
-    // ============================================================
-    document.getElementById('add-item-form')?.addEventListener('submit', async (e) => {
+    // ========== ADD ITEM ==========
+    document.getElementById('add-item-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentUser) { alert('Please sign in first!'); return; }
       if (!selectedFile) { alert('Please upload an image!'); return; }
@@ -288,6 +818,7 @@
       const category = document.getElementById('category').value;
       const subcategory = document.getElementById('subcategory').value;
       const description = document.getElementById('description').value;
+      const whatsapp = document.getElementById('whatsapp').value;
 
       const btn = document.getElementById('publish-btn');
       btn.disabled = true;
@@ -296,7 +827,7 @@
       try {
         const imageUrl = await uploadToImgBB(selectedFile);
         await addDoc(collection(db, 'items'), {
-          title, price, location, category, subcategory, description,
+          title, price, location, category, subcategory, description, whatsapp,
           imageUrl, status: 'Available',
           ownerId: currentUser.uid,
           ownerName: currentUser.displayName || 'User',
@@ -317,9 +848,7 @@
       }
     });
 
-    // ============================================================
-    // MY ITEMS
-    // ============================================================
+    // ========== MY ITEMS ==========
     function loadMyItems(userId) {
       const q = query(collection(db, 'items'), where('ownerId', '==', userId));
       onSnapshot(q, (snapshot) => {
@@ -333,6 +862,8 @@
           const item = itemDoc.data();
           const docId = itemDoc.id;
           const isAvail = item.status === 'Available';
+          const whatsappLink = item.whatsapp ? `https://wa.me/${item.whatsapp}?text=Hi%20I%27m%20interested%20in%20renting%20${encodeURIComponent(item.title)}` : '';
+
           list.innerHTML += `
             <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-indigo-500/30 transition">
               <div class="flex items-center gap-4">
@@ -343,7 +874,8 @@
                   <span class="text-xs ${isAvail ? 'text-emerald-400' : 'text-rose-400'} block">${item.status}</span>
                 </div>
               </div>
-              <div class="flex gap-2">
+              <div class="flex gap-2 flex-wrap">
+                ${whatsappLink ? `<a href="${whatsappLink}" target="_blank" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
                 <button onclick="toggleStatus('${docId}', '${item.status}')" class="px-3 py-1.5 text-xs font-bold rounded-lg ${isAvail ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'} text-white transition">
                   ${isAvail ? '📌 Mark Rented' : '✅ Mark Available'}
                 </button>
@@ -366,16 +898,42 @@
       }
     };
 
-    // ============================================================
-    // CHAT SYSTEM (Universal with Reply)
-    // ============================================================
-    const CHAT_ID = 'global_chat';
+    // ========== DASHBOARD ==========
+    function updateDashboard() {
+      if (!currentUser) return;
+      const userItems = allItems.filter(item => item.ownerId === currentUser.uid);
+      document.getElementById('dash-items').textContent = userItems.length;
+      document.getElementById('dash-available').textContent = userItems.filter(i => i.status === 'Available').length;
+      document.getElementById('dash-rented').textContent = userItems.filter(i => i.status === 'Currently Rented').length;
 
-    window.openChat = (itemId, itemTitle) => {
+      const activity = document.getElementById('dash-activity');
+      if (userItems.length === 0) {
+        activity.innerHTML = '<p class="text-center text-xs py-4 text-slate-500">No activity yet. Start listing your items!</p>';
+      } else {
+        activity.innerHTML = userItems.slice(0, 5).map(item => `
+          <div class="flex justify-between items-center py-2 border-b border-slate-800/50">
+            <span class="text-sm text-slate-300">${item.title}</span>
+            <span class="text-xs ${item.status === 'Available' ? 'text-emerald-400' : 'text-amber-400'}">${item.status}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ========== CHAT SYSTEM ==========
+    let chatItemId = null;
+    let chatItemOwnerId = null;
+    let chatItemTitle = '';
+
+    window.openChat = (itemId, title, ownerId) => {
       if (!currentUser) { alert('Please sign in first!'); return; }
+      chatItemId = itemId;
+      chatItemOwnerId = ownerId;
+      chatItemTitle = title;
       document.getElementById('chat-view').classList.remove('hidden');
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('chat-item-title').textContent = '💬 ' + itemTitle;
+      document.getElementById('chat-title').textContent = '💬 ' + title;
+      activeChatType = 'everyone';
+      updateChatTabs();
       loadChatMessages();
     };
 
@@ -384,12 +942,62 @@
       switchPage('home');
     };
 
+    // Chat Tabs
+    document.querySelectorAll('.chat-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeChatType = tab.dataset.chat;
+        loadChatMessages();
+      });
+    });
+
+    function updateChatTabs() {
+      document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.chat-tab[data-chat="${activeChatType}"]`)?.classList.add('active');
+    }
+
+    // Delete Chat
+    document.getElementById('chat-delete-btn').addEventListener('click', async () => {
+      if (!currentUser || !chatItemId) return;
+      if (!confirm('Delete all messages in this chat?')) return;
+
+      try {
+        const chatRef = collection(db, 'chats', chatItemId, 'messages');
+        const q = query(chatRef);
+        const snapshot = await getDocs(q);
+        const batch = writeBatch(db);
+        snapshot.docs.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+        alert('✅ Chat deleted successfully!');
+      } catch (error) {
+        alert('Error deleting chat: ' + error.message);
+      }
+    });
+
     function loadChatMessages() {
-      const q = query(collection(db, 'chats', CHAT_ID, 'messages'), orderBy('timestamp', 'asc'));
+      const chatId = chatItemId || 'global';
+      let chatPath = `chats_${chatId}`;
+      
+      if (activeChatType === 'everyone') {
+        chatPath = `chats_${chatId}_everyone`;
+      } else if (activeChatType === 'owner') {
+        chatPath = `chats_${chatId}_owner`;
+        if (chatItemOwnerId && currentUser && currentUser.uid !== chatItemOwnerId) {
+          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><p>This is a private owner chat.</p></div>`;
+          return;
+        }
+      } else if (activeChatType === 'private') {
+        if (!currentUser) return;
+        const userIds = [currentUser.uid, chatItemOwnerId].sort();
+        chatPath = `chats_private_${userIds.join('_')}`;
+      }
+
+      const q = query(collection(db, chatPath), orderBy('timestamp', 'asc'));
       onSnapshot(q, (snapshot) => {
         messagesBox.innerHTML = '';
         if (snapshot.empty) {
-          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p><p class="text-xs">Start the conversation!</p></div>`;
+          messagesBox.innerHTML = `<div class="text-center text-slate-500 py-10"><i class="fa-solid fa-comment-dots text-4xl mb-3 block text-slate-700"></i><p class="text-sm">No messages yet</p></div>`;
           return;
         }
 
@@ -397,7 +1005,6 @@
           const msg = doc.data();
           const isMe = msg.senderId === currentUser?.uid;
           const senderName = msg.senderName || 'Anonymous';
-          const msgId = doc.id;
 
           messagesBox.innerHTML += `
             <div class="message-in flex flex-col ${isMe ? 'items-end' : 'items-start'} group">
@@ -409,9 +1016,9 @@
               <div class="relative">
                 <div class="px-4 py-2.5 rounded-2xl text-sm max-w-[80%] break-words ${isMe ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-br-none shadow-lg shadow-indigo-600/20' : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'}">
                   ${msg.replyTo ? `<div class="text-[10px] bg-slate-700/30 p-2 rounded-lg mb-1 border-l-2 border-indigo-400 text-slate-300"><i class="fa-solid fa-reply mr-1"></i> ${msg.replyTo}</div>` : ''}
-                  ${msg.text}
+                  <div class="message-text">${msg.text}</div>
                 </div>
-                <button onclick="setReply('${msgId}', '${msg.text.replace(/'/g, "\\'")}')" class="absolute -top-2 ${isMe ? '-left-8' : '-right-8'} opacity-0 group-hover:opacity-100 transition bg-slate-800 hover:bg-indigo-600 text-slate-400 hover:text-white p-1 rounded-full text-[10px] border border-slate-700 hover:border-indigo-500">
+                <button onclick="setReply('${doc.id}', '${msg.text.replace(/'/g, "\\'")}')" class="absolute -top-2 ${isMe ? '-left-8' : '-right-8'} opacity-0 group-hover:opacity-100 transition bg-slate-800 hover:bg-indigo-600 text-slate-400 hover:text-white p-1 rounded-full text-[10px] border border-slate-700 hover:border-indigo-500">
                   <i class="fa-solid fa-reply"></i>
                 </button>
               </div>
@@ -431,16 +1038,29 @@
       document.getElementById('msg-input').focus();
     };
 
-    document.getElementById('reply-cancel-btn')?.addEventListener('click', () => {
+    document.getElementById('reply-cancel-btn').addEventListener('click', () => {
       replyToMessage = null;
       document.getElementById('reply-preview').classList.add('hidden');
     });
 
     // Send Message
-    chatForm?.addEventListener('submit', async (e) => {
+    chatForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = msgInput.value.trim();
-      if (!text || !currentUser) return;
+      if (!text || !currentUser || !chatItemId) return;
+
+      const chatId = chatItemId || 'global';
+      let chatPath = `chats_${chatId}`;
+      
+      if (activeChatType === 'everyone') {
+        chatPath = `chats_${chatId}_everyone`;
+      } else if (activeChatType === 'owner') {
+        chatPath = `chats_${chatId}_owner`;
+      } else if (activeChatType === 'private') {
+        if (!chatItemOwnerId) return;
+        const userIds = [currentUser.uid, chatItemOwnerId].sort();
+        chatPath = `chats_private_${userIds.join('_')}`;
+      }
 
       try {
         const msgData = {
@@ -454,7 +1074,7 @@
           msgData.replyTo = replyToMessage.text;
           msgData.replyToId = replyToMessage.id;
         }
-        await addDoc(collection(db, 'chats', CHAT_ID, 'messages'), msgData);
+        await addDoc(collection(db, chatPath), msgData);
         msgInput.value = '';
         replyToMessage = null;
         document.getElementById('reply-preview').classList.add('hidden');
@@ -464,18 +1084,15 @@
       }
     });
 
-    msgInput?.addEventListener('keypress', (e) => {
+    msgInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         chatForm.dispatchEvent(new Event('submit'));
       }
     });
 
-    // ============================================================
-    // INIT
-    // ============================================================
-    console.log('✅ Rentify LK v4.0 - Premium P2P Rental Platform Loaded!');
-    console.log('🔥 Features: 25 Districts, Categories with Sub-Categories, Profile Photos, Reply System');
+    console.log('✅ Rentify LK v5.0 - Premium P2P Rental Platform Loaded!');
+    console.log('🔥 Features: WhatsApp, Private Chat, Dashboard, Sidebar Menu, Chat Tabs');
   </script>
 </body>
-</html>
+    </html>
